@@ -1,7 +1,6 @@
 package com.jackfruit.mall.ui.activity;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -58,6 +57,9 @@ public class LocationActivity extends BaseActivity {
         mBaiduMap
                 .setMyLocationConfigeration(new MyLocationConfiguration(
                         mCurrentMode, true, mCurrentMarker));
+       /* mBaiduMap
+                .setMyLocationConfigeration(new MyLocationConfiguration(
+                        mCurrentMode, true, null));*/
 
         // 定位初始化
         mLocClient = new LocationClient(JFApplication.getAppContext());
@@ -82,7 +84,6 @@ public class LocationActivity extends BaseActivity {
             if (location == null || mMapView == null) {
                 return;
             }
-            Toast.makeText(activity, location.getAddrStr() + location.getStreet() + location.getDistrict(), Toast.LENGTH_SHORT).show();
             MyLocationData locData = new MyLocationData.Builder()
                     .accuracy(location.getRadius())
                     // 此处设置开发者获取到的方向信息，顺时针0-360
