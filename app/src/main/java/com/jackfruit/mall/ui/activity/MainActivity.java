@@ -1,5 +1,6 @@
 package com.jackfruit.mall.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -100,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             //第一次运行
             initFragments(true);
         }
+
+
         //initFragments();
         /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         hideTab(ft);
@@ -205,6 +209,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK) {
+            String contents = getIntent().getStringExtra("SCAN_RESULT");//图像内容
+            String format = getIntent().getStringExtra("SCAN_RESULT_FROMAT");//图像格式
+            Toast.makeText(this, contents, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == REQUEST_MULTI_PERMISSION) {
@@ -221,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         LogUtils.init().writeLog(new LogUtils.AppLog("MA", "onAttachFragment", DateUtils.getDatetime(), "绑定").toString());
-        /*if(homeFragment == null && fragment instanceof HomePageFragment) {
+        if(homeFragment == null && fragment instanceof HomePageFragment) {
             homeFragment = (HomePageFragment) fragment;
         }
         if(categoryFragment == null && fragment instanceof CategroyFragment) {
@@ -235,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         }
         if(mineFragment == null && fragment instanceof MineFragment) {
             mineFragment = (MineFragment) fragment;
-        }*/
+        }
 
     }
 
@@ -385,4 +399,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         currentTab = savedInstanceState.getInt("currentTab", 0);
         LogUtils.init().writeLog(new LogUtils.AppLog("MA", "oR", DateUtils.getDatetime(), "恢复").toString());
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.jackfruit.mall.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jackfruit.mall.R;
+import com.jackfruit.mall.ui.activity.DemoActivity;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MineFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -43,8 +48,9 @@ public class MineFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_mine, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_mine, container, false);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
     @Override
@@ -58,4 +64,8 @@ public class MineFragment extends Fragment {
         super.onDetach();
     }
 
+    @OnClick(R.id.iv_mine)
+    public void onClick() {
+        startActivity(new Intent(getActivity(), DemoActivity.class));
+    }
 }

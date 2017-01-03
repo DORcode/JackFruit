@@ -10,6 +10,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/baidu_lib" />
+            <option value="$PROJECT_DIR$/lib-zxing" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -5,6 +5,7 @@
     tools:context="com.jackfruit.mall.ui.fragment.HomePageFragment">
 
     <TextView
+        android:id="@+id/tv_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="首页" />

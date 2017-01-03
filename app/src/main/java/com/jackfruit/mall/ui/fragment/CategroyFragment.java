@@ -1,14 +1,18 @@
 package com.jackfruit.mall.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.jackfruit.mall.R;
+import com.jackfruit.mall.ui.activity.LocationActivity;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CategroyFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
@@ -39,7 +43,13 @@ public class CategroyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_categroy, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_categroy, container, false);
+        ButterKnife.bind(this, rootView);
+        return rootView;
     }
 
+    @OnClick(R.id.tv_location)
+    public void onClick() {
+        startActivity(new Intent(getActivity(), LocationActivity.class));
+    }
 }

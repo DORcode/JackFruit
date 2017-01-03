@@ -5,6 +5,7 @@
     tools:context="com.jackfruit.mall.ui.fragment.MineFragment">
 
     <ImageView
+        android:id="@+id/iv_mine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"/>

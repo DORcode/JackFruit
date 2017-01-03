@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/JackFruit.iml" filepath="$PROJECT_DIR$/JackFruit.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/baidu_lib/baidu_lib.iml" filepath="$PROJECT_DIR$/baidu_lib/baidu_lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib-zxing/lib-zxing.iml" filepath="$PROJECT_DIR$/lib-zxing/lib-zxing.iml" />
     </modules>
   </component>
 </project>
