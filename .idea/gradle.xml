@@ -10,8 +10,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app_lib" />
             <option value="$PROJECT_DIR$/baidu_lib" />
             <option value="$PROJECT_DIR$/lib-zxing" />
+            <option value="$PROJECT_DIR$/umeng_lib" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
