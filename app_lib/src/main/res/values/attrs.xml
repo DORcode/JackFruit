@@ -822,8 +822,8 @@
              Finally, by setting the choiceMode to multipleChoiceModal the list allows
              any number of items to be chosen in a special selection mode.
              The application will supply a
-             {@link android.widget.AbsListView.MultiChoiceModeListener} using
-             {@link android.widget.AbsListView#setMultiChoiceModeListener} to control the
+             {@link android.common.lib.widget.AbsListView.MultiChoiceModeListener} using
+             {@link android.common.lib.widget.AbsListView#setMultiChoiceModeListener} to control the
              selection mode. This uses the {@link android.view.ActionMode} API.
         -->
         <attr name="choiceMode">

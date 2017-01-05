@@ -2,16 +2,12 @@ package common.lib.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,11 +24,11 @@ import common.lib.utils.StatusBarUtils;
  * @类：common.lib.base
  * @描述 describe
  * @创建者 kh
- * @日期 2017/1/4 17:55
+ * @日期 2017/1/5 17:52
  * @修改
- * @修改时期 2017/1/4 17:55
+ * @修改时期 2017/1/5 17:52
  */
-public abstract class BaseAppCompatActivity extends AppCompatActivity {
+public abstract class BaseFragmentActivity extends FragmentActivity {
     protected static String TAG = null;
     protected Context mContext;
     //手机屏幕宽度
@@ -182,7 +178,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     protected abstract void initViewsAndEvents();
 
     /**
-    * 加载目标控件
+     * 加载目标控件
      * */
     protected abstract View getLoadingTargetView();
 
@@ -196,7 +192,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     /**
      * get the overridePendingTransition mode
      */
-    protected abstract TransitionMode getOverridePendingTransitionMode();
+    protected abstract BaseAppCompatActivity.TransitionMode getOverridePendingTransitionMode();
 
     /**
      * toggle show loading
