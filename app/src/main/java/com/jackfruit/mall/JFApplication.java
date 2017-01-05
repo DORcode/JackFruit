@@ -13,6 +13,8 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
+import common.lib.netstatus.NetBroadcastReceiver;
+
 /**
  * @项目名称 JackFruit
  * @类：com.jackfruit.mall
@@ -32,6 +34,7 @@ public class JFApplication extends Application {
         super.onCreate();
         context = getApplicationContext();
         instance = this;
+        NetBroadcastReceiver.registerNetworkReceiver(getApplicationContext());
         PermissionsManager.init(getApplicationContext());
         ZXingLibrary.initDisplayOpinion(this);
         SDKInitializer.initialize(getApplicationContext());
@@ -58,6 +61,7 @@ public class JFApplication extends Application {
         LogUtils.init().writeLog(new LogUtils.AppLog("", "onCreate()", DateUtils.getDatetime(), null).toString());
         LogUtils.init().writeLog(new LogUtils.AppLog("Ap", "oC", DateUtils.getDatetime(), "").toString());
     }
+
 
     public static Context getAppContext() {
         return context;
