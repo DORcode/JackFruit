@@ -22,9 +22,9 @@ android {
         }
     }
 
-    dexOptions {
+    /*dexOptions {
         jumboMode = true
-    }
+    }*/
 }
 
 dependencies {
