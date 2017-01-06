@@ -2,29 +2,21 @@ package com.jackfruit.mall.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.jackfruit.mall.BuildConfig;
-import com.jackfruit.mall.JFApplication;
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.bean.DemoBean;
 import com.jackfruit.mall.bean.DemoResult;
-import com.jackfruit.mall.bean.HttpResult;
-import com.jackfruit.mall.bean.User;
 import com.jackfruit.mall.http.RetrofitManager;
 import com.jackfruit.mall.ui.fragment.MineFragment;
 import com.jackfruit.mall.ui.fragment.CartFragment;
@@ -42,7 +34,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -113,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         initBottomView();
         //申请存储、相机、定位权限
         PermissionsManager.get().requestMultiPermissionsIfNecessary(this, REQUEST_MULTI_PERMISSION);
-        LogUtils.init().writeLog(new LogUtils.AppLog("MA", "oC", DateUtils.getDatetime(), "").toString());
         RetrofitManager.getRetrofitManager().getLoginService().getDemoResult()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -130,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
                     @Override
                     public void onNext(DemoResult<DemoBean> bean) {
-                        Log.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
+                        LogUtils.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
                         Toast.makeText(MainActivity.this, bean.getData().getUrl(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -171,8 +161,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     }
 
     private void initFragments(boolean isInit) {
-        LogUtils.init().writeLog(new LogUtils.AppLog("MA", "iF", DateUtils.getDatetime(), "").toString());
-
         fragments = new ArrayList<Fragment>();
         if(isInit) {
             homeFragment = HomePageFragment.newInstance("");
@@ -234,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        LogUtils.init().writeLog(new LogUtils.AppLog("MA", "onAttachFragment", DateUtils.getDatetime(), "绑定").toString());
         if(homeFragment == null && fragment instanceof HomePageFragment) {
             homeFragment = (HomePageFragment) fragment;
         }
@@ -255,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     @Override
     public void onTabSelected(int position) {
-        Log.e("", "onTabSelected: " + position);
+        LogUtils.e("", "onTabSelected: " + position);
         //是否点击当前tab
         if(currentTab != position) {
             switchTab(position);
@@ -375,7 +362,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtils.init().writeLog(new LogUtils.AppLog("MA", "oD", DateUtils.getDatetime(), "销毁").toString());
     }
 
     @Override
@@ -389,15 +375,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         transaction.commitAllowingStateLoss();*/
         super.onSaveInstanceState(outState);
         outState.putInt("currentTab", currentTab);
-        LogUtils.init().writeLog(new LogUtils.AppLog("MA", "oS", DateUtils.getDatetime(), "保存").toString());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "onRestoreInstanceState: ********");
+        LogUtils.i(TAG, "onRestoreInstanceState: ********");
         currentTab = savedInstanceState.getInt("currentTab", 0);
-        LogUtils.init().writeLog(new LogUtils.AppLog("MA", "oR", DateUtils.getDatetime(), "恢复").toString());
     }
 
 

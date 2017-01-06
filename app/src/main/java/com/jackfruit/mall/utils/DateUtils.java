@@ -12,6 +12,8 @@ import java.util.Date;
  */
 
 public class DateUtils {
+
+    //两个时间差
     public static int dateDiff(long date1, long date2) {
         long intervalMilli = date1 - date2;
         return (int) intervalMilli / (24 * 60 * 60 * 1000);

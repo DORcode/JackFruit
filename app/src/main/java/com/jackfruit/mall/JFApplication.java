@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.jackfruit.mall.utils.DateUtils;
-import com.jackfruit.mall.utils.LogUtils;
+import com.jackfruit.mall.utils.LogRecord;
 import com.jackfruit.mall.utils.PathUtil;
 import com.jackfruit.mall.utils.permission.PermissionsManager;
 import com.umeng.socialize.Config;
@@ -58,8 +58,7 @@ public class JFApplication extends Application {
         PlatformConfig.setDropbox("oz8v5apet3arcdy","h7p2pjbzkkxt02a");
 
         PathUtil.init();
-        LogUtils.init().writeLog(new LogUtils.AppLog("", "onCreate()", DateUtils.getDatetime(), null).toString());
-        LogUtils.init().writeLog(new LogUtils.AppLog("Ap", "oC", DateUtils.getDatetime(), "").toString());
+        LogRecord.init();
     }
 
 
