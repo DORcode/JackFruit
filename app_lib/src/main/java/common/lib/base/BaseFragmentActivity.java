@@ -195,6 +195,16 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     protected abstract BaseAppCompatActivity.TransitionMode getOverridePendingTransitionMode();
 
     /**
+     * 网络连接
+     */
+    protected abstract void onNetworkConnect();
+
+    /**
+     * 网络断开
+     */
+    protected abstract void onNetworkDisconnect();
+
+    /**
      * toggle show loading
      *
      * @param toggle

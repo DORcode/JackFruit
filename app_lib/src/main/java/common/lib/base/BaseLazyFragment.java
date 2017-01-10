@@ -223,6 +223,16 @@ public abstract class BaseLazyFragment extends Fragment {
     protected abstract boolean isBindEventBusHere();
 
     /**
+     * 网络连接
+     */
+    protected abstract void onNetworkConnect();
+
+    /**
+     * 网络断开
+     */
+    protected abstract void onNetworkDisconnect();
+
+    /**
      * get the support fragment manager
      *
      * @return

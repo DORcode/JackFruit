@@ -107,9 +107,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             @Override
             public void onNetConnect(NetUtils.NetType type) {
                 if(type.equals(NetUtils.NetType.MOBILE)) {
-                    //Toast.makeText(mContext, "手机网络", Toast.LENGTH_SHORT).show();
                 } else {
-                    //Toast.makeText(mContext, "Wifi", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -185,6 +183,16 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     * 加载目标控件
      * */
     protected abstract View getLoadingTargetView();
+
+    /**
+     * 网络连接
+     */
+    protected abstract void onNetworkConnect();
+
+    /**
+     * 网络断开
+     */
+    protected abstract void onNetworkDisconnect();
 
     /**
      * toggle overridePendingTransition
