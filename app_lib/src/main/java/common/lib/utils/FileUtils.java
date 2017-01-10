@@ -1,4 +1,4 @@
-package com.jackfruit.mall.utils;
+package common.lib.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -4,16 +4,15 @@ import android.app.Application;
 import android.content.Context;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.jackfruit.mall.utils.DateUtils;
 import com.jackfruit.mall.utils.LogRecord;
 import com.jackfruit.mall.utils.PathUtil;
-import com.jackfruit.mall.utils.permission.PermissionsManager;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
 import common.lib.netstatus.NetBroadcastReceiver;
+import common.lib.utils.permission.PermissionsManager;
 
 /**
  * @项目名称 JackFruit

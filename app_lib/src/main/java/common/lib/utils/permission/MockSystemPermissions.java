@@ -1,4 +1,8 @@
-package com.jackfruit.mall.utils.permission;
+package common.lib.utils.permission;
+
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,14 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CALL_PHONE;
-import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.GET_ACCOUNTS;
 import static android.Manifest.permission.READ_CALENDAR;
 import static android.Manifest.permission.READ_CONTACTS;

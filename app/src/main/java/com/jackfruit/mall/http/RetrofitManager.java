@@ -57,7 +57,7 @@ public class RetrofitManager {
         if(retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    //.client(getClient().build())
+                    .client(getClient().build())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();

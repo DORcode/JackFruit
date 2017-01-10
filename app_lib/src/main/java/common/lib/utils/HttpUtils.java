@@ -1,4 +1,4 @@
-package com.jackfruit.mall.utils;
+package common.lib.utils;
 
 import android.os.Environment;
 import android.util.Log;
@@ -28,7 +28,6 @@ public class HttpUtils {
     public static boolean writeResponseBodyToFile(ResponseBody responseBody, String path) {
         File file = new File(path);
 
-        Log.i(TAG, "writeToFile: " + Environment.getExternalStorageDirectory().toString() + File.separator + Constants.DB_NAME);
         ByteArrayOutputStream bos = null;
         OutputStream fos = null;
         InputStream is = null;

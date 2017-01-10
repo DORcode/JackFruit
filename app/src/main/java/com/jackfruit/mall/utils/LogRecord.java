@@ -1,7 +1,5 @@
 package com.jackfruit.mall.utils;
 
-import android.util.Log;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -10,27 +8,39 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import common.lib.utils.DateUtils;
+
 /**
  * 写日志文件
  * Created by Stats on 2016-12-02.
  */
 
 public class LogRecord {
+    private static final String TAG = "LogRecord";
     private static ConcurrentLinkedQueue queue = new ConcurrentLinkedQueue<String>();
-    private static boolean flag = true;
+    private static boolean logFlag = false;
+    private static boolean fileFlag = false;//创建txt文件线程是否运行
     private static LogRecord instance;
     private String logPath;
     private LogRunnable logRunnable;
+    private FileRunnable fileRunnable;
     private Thread thread;
+    private Thread fileThread;
     private int dayAgo = 7;
 
     private LogRecord() {
-
+        fileRunnable = new FileRunnable();
         this.logPath = PathUtil.getLogPath();
-        Log.d("", "LogRecord: " + (getLogFileLastestTime() == 0 || !fileIsToday()));
         if(getLogFileLastestTime() == 0 || !fileIsToday()) {
-            createTXTFile();
-
+            fileThread = new Thread(fileRunnable);
+            if(!fileFlag) {
+                fileThread.start();
+                try {
+                    fileThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         logRunnable = new LogRunnable();
     }
@@ -44,28 +54,30 @@ public class LogRecord {
 
     public void produceLog(String str) {
         queue.add(str);
+        //V2Log.d(TAG, "produceLog: 队列大小:" + queue.size());
         threadStart();
     }
     private void threadStart() {
-        if(!flag) {
-            flag = true;
-            logRunnable = new LogRunnable();
+        if(!logFlag) {
+            logFlag = true;
+            //logRunnable = new LogRunnable();
             thread = new Thread(logRunnable);
             thread.start();
         }
     }
 
     //写日志
-    public void writeLog(String txt) {
+    public synchronized void writeLog(String txt) {
         try{
-            File file = new File(logPath + File.separator + getLogFileLastestTime());
+
+            File file = new File(logPath + File.separator + "log_" + getLogFileLastestTime() + ".txt");
             FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(txt);
             bufferedWriter.newLine();
             bufferedWriter.close();
         } catch (IOException e) {
-            LogUtils.d("", "writeLog: ");
+            //V2Log.d("", "writeLog: 失败" + e.toString());
         }
     }
 
@@ -115,12 +127,13 @@ public class LogRecord {
     }
 
     //获取日志文件夹中最近文件的时间
-    private long getLogFileLastestTime() {
+    private synchronized long getLogFileLastestTime() {
         File file = new File(logPath);
         File[] files = file.listFiles();
 
         if(files != null) {
             long[] times = new long[files.length];
+
             for (int i = 0; i < files.length; i++) {
                 times[i] = getDateFromFileName(files[i].getName());
             }
@@ -161,22 +174,36 @@ public class LogRecord {
         @Override
         public void run() {
             while (true) {
-                if(fileIsToday()) {
-                    createTXTFile();
-                    deleteTXTFiles();
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                if(!fileIsToday()) {
+                    if(!fileFlag) {
+                        fileThread.start();
+                        try {
+                            fileThread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-
                 if (!queue.isEmpty() && getLogFileLastestTime() != 0){
                     writeLog((String) queue.poll());
                 }
-                if(!flag) {
+                if(!logFlag) {
                     break;
                 }
+            }
+        }
+    }
+
+    class FileRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            createTXTFile();
+            deleteTXTFiles();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

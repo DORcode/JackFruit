@@ -20,10 +20,7 @@ import com.jackfruit.mall.ui.fragment.CategroyFragment;
 import com.jackfruit.mall.ui.fragment.FindFragment;
 import com.jackfruit.mall.ui.fragment.HomePageFragment;
 import com.jackfruit.mall.ui.fragment.MineFragment;
-import com.jackfruit.mall.utils.DateUtils;
 import com.jackfruit.mall.utils.FragmentNavTabUtil;
-import com.jackfruit.mall.utils.permission.PermissionHelper;
-import com.jackfruit.mall.utils.permission.PermissionsManager;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
@@ -32,6 +29,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import common.lib.utils.permission.PermissionHelper;
+import common.lib.utils.permission.PermissionsManager;
 
 public class DemoActivity extends AppCompatActivity  implements BottomNavigationBar.OnTabSelectedListener {
 

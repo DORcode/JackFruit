@@ -1,4 +1,4 @@
-package com.jackfruit.mall.utils.permission;
+package common.lib.utils.permission;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,8 +11,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jackfruit.mall.R;
-import com.jackfruit.mall.utils.Constants;
+import common.lib.Constants;
+import common.lib.R;
 
 /**
  * @ClassName: PermissionHelper

@@ -1,4 +1,4 @@
-package com.jackfruit.mall.utils.permission;
+package common.lib.utils.permission;
 
 import android.content.Context;
 import android.content.SharedPreferences;

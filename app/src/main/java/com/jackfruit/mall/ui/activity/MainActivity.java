@@ -8,12 +8,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.jackfruit.mall.BuildConfig;
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.bean.DemoBean;
 import com.jackfruit.mall.bean.DemoResult;
@@ -23,23 +25,22 @@ import com.jackfruit.mall.ui.fragment.CartFragment;
 import com.jackfruit.mall.ui.fragment.CategroyFragment;
 import com.jackfruit.mall.ui.fragment.FindFragment;
 import com.jackfruit.mall.ui.fragment.HomePageFragment;
-import com.jackfruit.mall.utils.DateUtils;
 import com.jackfruit.mall.utils.FragmentNavTabUtil;
-import com.jackfruit.mall.utils.LogUtils;
-import com.jackfruit.mall.utils.permission.PermissionHelper;
-import com.jackfruit.mall.utils.permission.PermissionsManager;
+import com.jackfruit.mall.utils.V2Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import common.lib.utils.permission.PermissionHelper;
+import common.lib.utils.permission.PermissionsManager;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
-    String TAG = "";
+    private static final String TAG = "MainActivity";
     private static final int REQUEST_MULTI_PERMISSION = 0x0101;//申请多个权限
     //权限拒绝后重复申请次数
     private static int permissionRequestCount = 0;
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Toast toast = new Toast(this);
+        toast.setGravity(Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
         if(savedInstanceState != null) {
             currentTab = savedInstanceState.getInt("currentTab", 0);
             initFragments(false);
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
                     @Override
                     public void onNext(DemoResult<DemoBean> bean) {
-                        LogUtils.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
+                        V2Log.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
                         Toast.makeText(MainActivity.this, bean.getData().getUrl(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -242,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     @Override
     public void onTabSelected(int position) {
-        LogUtils.e("", "onTabSelected: " + position);
+        V2Log.e("", "onTabSelected: " + position);
         //是否点击当前tab
         if(currentTab != position) {
             switchTab(position);
@@ -380,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        LogUtils.i(TAG, "onRestoreInstanceState: ********");
+        V2Log.i(TAG, "onRestoreInstanceState: ********");
         currentTab = savedInstanceState.getInt("currentTab", 0);
     }
 

@@ -1,9 +1,12 @@
 package com.jackfruit.mall.utils;
 
-import android.support.v4.BuildConfig;
 import android.util.Log;
 
-public class LogUtils {
+import com.jackfruit.mall.BuildConfig;
+
+import common.lib.utils.DateUtils;
+
+public class V2Log {
     private static boolean debug = BuildConfig.DEBUG;
     private static int level = debug ? Log.VERBOSE : Log.DEBUG;
 

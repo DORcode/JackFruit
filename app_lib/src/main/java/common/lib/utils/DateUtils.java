@@ -1,4 +1,4 @@
-package com.jackfruit.mall.utils;
+package common.lib.utils;
 
 import android.util.Log;
 
