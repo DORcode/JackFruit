@@ -11,7 +11,6 @@ import java.io.Serializable;
  * @修改
  * @修改时期 2016/12/27 14:44
  */
-
 public class HttpResult<T> implements Serializable {
     private int code;
     private String message;

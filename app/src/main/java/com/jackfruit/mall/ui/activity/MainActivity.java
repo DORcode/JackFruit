@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.jackfruit.mall.BuildConfig;
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.bean.DemoBean;
 import com.jackfruit.mall.bean.DemoResult;
@@ -33,11 +32,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import common.lib.rx.BaseSubscriber;
+import common.lib.utils.ExceptionHandle;
 import common.lib.utils.permission.PermissionHelper;
 import common.lib.utils.permission.PermissionsManager;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
     private static final String TAG = "MainActivity";
@@ -125,9 +128,26 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                     @Override
                     public void onNext(DemoResult<DemoBean> bean) {
                         V2Log.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
+                        //Toast.makeText(MainActivity.this, bean.getData().getUrl(), Toast.LENGTH_LONG).show();
+                    }
+                });
+        
+        Subscription subscription = RetrofitManager.getRetrofitManager().getLoginService().getDemoResult()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSubscriber<DemoResult<DemoBean>>() {
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(DemoResult<DemoBean> bean) {
+                        V2Log.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
                         Toast.makeText(MainActivity.this, bean.getData().getUrl(), Toast.LENGTH_LONG).show();
                     }
                 });
+        CompositeSubscription compositeSubscription = new CompositeSubscription();
+        compositeSubscription.add(subscription);
     }
 
     //初始化底部tab
@@ -333,12 +353,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     //显示tab页
     public void switchTab(int position) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        /*//新点击Tab在原左边
-        if(currentTab > position) {
-            ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_out);
-        } else {
-            ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out);
-        }*/
+
         //隐藏前一个显示Tab
         ft.hide(fragments.get(currentTab));
         //判断是否已经存在，不存在tags先加入
@@ -348,7 +363,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         } else {
             ft.show(fragments.get(position));
         }
-        //ft.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
         currentTab = position;
     }
@@ -370,13 +384,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        /*FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.remove(homeFragment);
-        transaction.remove(categoryFragment);
-        transaction.remove(findFragment);
-        transaction.remove(cartFragment);
-        transaction.remove(mineFragment);
-        transaction.commitAllowingStateLoss();*/
         super.onSaveInstanceState(outState);
         outState.putInt("currentTab", currentTab);
     }
@@ -387,6 +394,4 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         V2Log.i(TAG, "onRestoreInstanceState: ********");
         currentTab = savedInstanceState.getInt("currentTab", 0);
     }
-
-
 }

@@ -15,16 +15,16 @@ import com.jackfruit.mall.ui.activity.DemoActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import common.lib.base.BaseLazyFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomePageFragment extends Fragment {
+public class HomePageFragment extends BaseLazyFragment {
 
     private static final String ARG_PARAM1 = "param1";
 
     public HomePageFragment() {
-        // Required empty public constructor
     }
 
     public static HomePageFragment newInstance(String param1) {
@@ -46,6 +46,51 @@ public class HomePageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_home_page, container, false);
         ButterKnife.bind(this, rootView);
         return rootView;
+    }
+
+    @Override
+    protected void onFirstUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserInvisible() {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return 0;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected void onNetworkConnect() {
+
+    }
+
+    @Override
+    protected void onNetworkDisconnect() {
+
     }
 
     @OnClick(R.id.tv_home)

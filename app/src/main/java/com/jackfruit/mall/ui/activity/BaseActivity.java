@@ -6,12 +6,17 @@ import android.os.Bundle;
 
 import java.util.logging.Logger;
 
-public class BaseActivity extends AppCompatActivity {
+import common.lib.base.BaseAppCompatActivity;
+import common.lib.base.BaseFragmentActivity;
 
-    protected Activity activity;
+/**
+ *
+ *@author kh
+ *create at  
+ */
+public abstract class BaseActivity extends BaseAppCompatActivity { 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = this;
     }
 }
