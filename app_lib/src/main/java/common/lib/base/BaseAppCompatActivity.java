@@ -107,7 +107,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
             @Override
             public void onNetConnect(NetUtils.NetType type) {
                 if(type.equals(NetUtils.NetType.MOBILE)) {
+                    onNetworkConnect();
                 } else {
+                    onNetDisConnect();
                 }
             }
 
@@ -125,6 +127,9 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
+        if(null != getLoadingTargetView()) {
+            mVaryViewHelperController = new VaryViewHelperController(getLoadingTargetView());
+        }
     }
 
     @Override

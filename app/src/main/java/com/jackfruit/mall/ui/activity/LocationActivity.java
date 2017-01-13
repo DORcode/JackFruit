@@ -1,6 +1,7 @@
 package com.jackfruit.mall.ui.activity;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -23,6 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import common.lib.base.BaseAppCompatActivity;
 
 public class LocationActivity extends BaseActivity {
 
@@ -125,6 +127,51 @@ public class LocationActivity extends BaseActivity {
         mMapView.onDestroy();
         mMapView = null;
         super.onDestroy();
+    }
+
+    @Override
+    protected int getRootViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void onNetworkConnect() {
+
+    }
+
+    @Override
+    protected void onNetworkDisconnect() {
+
+    }
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {
+        return false;
+    }
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {
+        return null;
     }
 
 }

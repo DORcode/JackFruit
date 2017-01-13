@@ -123,6 +123,9 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
         ButterKnife.bind(this);
+        if(null != getLoadingTargetView()) {
+            mVaryViewHelperController = new VaryViewHelperController(getLoadingTargetView());
+        }
     }
 
     @Override

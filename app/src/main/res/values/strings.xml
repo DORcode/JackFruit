@@ -11,4 +11,5 @@
         <item>购物车</item>
         <item>我的</item>
     </string-array>
+    <string name="title_activity_playlist">PlaylistActivity</string>
 </resources>

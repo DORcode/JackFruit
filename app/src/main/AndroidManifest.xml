@@ -60,7 +60,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activity.DemoActivity" />
         <activity android:name=".ui.activity.LocationActivity" />
-        <activity android:name=".ui.activity.HomeActivity"></activity>
+        <activity android:name=".ui.activity.HomeActivity" />
+        <activity
+            android:name=".ui.activity.PlaylistActivity"
+            android:label="@string/title_activity_playlist"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

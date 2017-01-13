@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.ui.activity.DemoActivity;
+import com.jackfruit.mall.ui.activity.PlaylistActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -93,8 +94,16 @@ public class HomePageFragment extends BaseLazyFragment {
 
     }
 
-    @OnClick(R.id.tv_home)
-    public void onClick() {
-        startActivity(new Intent(getActivity(), DemoActivity.class));
+    @OnClick({R.id.tv_home, R.id.tv_homepage})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_home:
+                startActivity(new Intent(getActivity(), DemoActivity.class));
+                break;
+            case R.id.tv_homepage:
+                gotoActivity(PlaylistActivity.class);
+                break;
+        }
+
     }
 }
