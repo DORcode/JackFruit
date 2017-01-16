@@ -111,26 +111,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         initBottomView();
         //申请存储、相机、定位权限
         PermissionsManager.get().requestMultiPermissionsIfNecessary(this, REQUEST_MULTI_PERMISSION);
-        RetrofitManager.getRetrofitManager().getLoginService().getDemoResult()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<DemoResult<DemoBean>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i(TAG, "onError: " + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(DemoResult<DemoBean> bean) {
-                        V2Log.d(TAG, "onNext: " + bean.getCode() + bean.getData().getVersionCode() + bean.getData().getUrl());
-                        //Toast.makeText(MainActivity.this, bean.getData().getUrl(), Toast.LENGTH_LONG).show();
-                    }
-                });
         
         Subscription subscription = RetrofitManager.getRetrofitManager().getLoginService().getDemoResult()
                 .subscribeOn(Schedulers.io())

@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import common.lib.MessageEvent;
 import common.lib.loading.VaryViewHelperController;
 
 /**
@@ -233,10 +234,17 @@ public abstract class BaseLazyFragment extends Fragment {
     protected abstract void onNetworkDisconnect();
 
     /**
+     * 订阅接收EventBus消息
+     * @param event
+     */
+    public abstract void onMessageEvent(MessageEvent event);
+
+    /**
      * get the support fragment manager
      *
      * @return
      */
+
     protected FragmentManager getSupportFragmentManager() {
         return getActivity().getSupportFragmentManager();
     }

@@ -12,6 +12,7 @@ import android.view.View;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
+import common.lib.MessageEvent;
 import common.lib.R;
 import common.lib.loading.VaryViewHelperController;
 import common.lib.netstatus.NetBroadcastReceiver;
@@ -206,6 +207,12 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
      * 网络断开
      */
     protected abstract void onNetworkDisconnect();
+
+    /**
+     * 订阅接收EventBus消息
+     * @param event
+     */
+    public abstract void onMessageEvent(MessageEvent event);
 
     /**
      * toggle show loading

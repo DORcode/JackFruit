@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/baidu_lib/baidu_lib.iml" filepath="$PROJECT_DIR$/baidu_lib/baidu_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib-zxing/lib-zxing.iml" filepath="$PROJECT_DIR$/lib-zxing/lib-zxing.iml" />
       <module fileurl="file://$PROJECT_DIR$/umeng_lib/umeng_lib.iml" filepath="$PROJECT_DIR$/umeng_lib/umeng_lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" filepath="$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" />
     </modules>
   </component>
 </project>

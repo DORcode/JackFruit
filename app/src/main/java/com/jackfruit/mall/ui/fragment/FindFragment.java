@@ -23,10 +23,14 @@ import com.umeng.socialize.shareboard.ShareBoardConfig;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.lang.ref.WeakReference;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import common.lib.MessageEvent;
 
 public class FindFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
@@ -96,6 +100,57 @@ public class FindFragment extends BaseFragment {
                 });
 
         return view;
+    }
+
+    @Override
+    protected void onFirstUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserInvisible() {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return 0;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
+    }
+
+    @Override
+    protected void onNetworkConnect() {
+
+    }
+
+    @Override
+    protected void onNetworkDisconnect() {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Override
+    public void onMessageEvent(MessageEvent event) {
+
     }
 
     private static class CustomShareListener implements UMShareListener {
@@ -168,7 +223,7 @@ public class FindFragment extends BaseFragment {
                 mShareAction.open(config);
                 break;
             case R.id.tv_appkey_check:
-                goToActivity(CheckActivity.class);
+                gotoActivity(CheckActivity.class);
                 break;
         }
 

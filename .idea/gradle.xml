@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/baidu_lib" />
             <option value="$PROJECT_DIR$/lib-zxing" />
             <option value="$PROJECT_DIR$/umeng_lib" />
+            <option value="$PROJECT_DIR$/xrecyclerview" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

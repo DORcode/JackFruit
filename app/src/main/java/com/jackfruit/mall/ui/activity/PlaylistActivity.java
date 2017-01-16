@@ -11,7 +11,11 @@ import android.widget.RelativeLayout;
 
 import com.jackfruit.mall.R;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
+import common.lib.MessageEvent;
 import common.lib.base.BaseAppCompatActivity;
 
 public class PlaylistActivity extends BaseActivity {
@@ -69,6 +73,12 @@ public class PlaylistActivity extends BaseActivity {
     @Override
     protected TransitionMode getOverridePendingTransitionMode() {
         return TransitionMode.LEFT;
+    }
+
+    @Override
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+
     }
 
 }

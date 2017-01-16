@@ -6,15 +6,13 @@ import android.support.v4.app.Fragment;
 
 import com.jackfruit.mall.R;
 
+import common.lib.base.BaseLazyFragment;
 
-public class BaseFragment extends Fragment {
+
+public abstract class BaseFragment extends BaseLazyFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    protected void goToActivity(Class clx) {
-        startActivity(new Intent(getActivity(), clx));
     }
 }

@@ -1,21 +1,19 @@
 package com.jackfruit.mall.ui.fragment;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.ui.activity.DemoActivity;
 import com.jackfruit.mall.ui.activity.PlaylistActivity;
 
-import butterknife.ButterKnife;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.OnClick;
+import common.lib.MessageEvent;
 import common.lib.base.BaseLazyFragment;
 
 /**
@@ -34,19 +32,6 @@ public class HomePageFragment extends BaseLazyFragment {
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home_page, container, false);
-        ButterKnife.bind(this, rootView);
-        return rootView;
     }
 
     @Override
@@ -76,12 +61,12 @@ public class HomePageFragment extends BaseLazyFragment {
 
     @Override
     protected int getContentViewLayoutID() {
-        return 0;
+        return R.layout.fragment_home_page;
     }
 
     @Override
     protected boolean isBindEventBusHere() {
-        return false;
+        return true;
     }
 
     @Override
@@ -91,6 +76,12 @@ public class HomePageFragment extends BaseLazyFragment {
 
     @Override
     protected void onNetworkDisconnect() {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Override
+    public void onMessageEvent(MessageEvent event) {
 
     }
 

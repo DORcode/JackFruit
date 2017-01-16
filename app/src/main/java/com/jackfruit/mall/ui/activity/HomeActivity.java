@@ -6,6 +6,10 @@ import android.view.View;
 
 import com.jackfruit.mall.R;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import common.lib.MessageEvent;
 import common.lib.base.BaseAppCompatActivity;
 
 public class HomeActivity extends BaseActivity {
@@ -59,5 +63,11 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected TransitionMode getOverridePendingTransitionMode() {
         return TransitionMode.LEFT;
+    }
+
+    @Override
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+
     }
 }

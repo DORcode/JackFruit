@@ -1,6 +1,7 @@
 package com.jackfruit.mall.ui.activity;
 
 import android.content.Intent;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -24,15 +26,20 @@ import com.jackfruit.mall.utils.FragmentNavTabUtil;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import common.lib.MessageEvent;
+import common.lib.base.BaseAppCompatActivity;
 import common.lib.utils.permission.PermissionHelper;
 import common.lib.utils.permission.PermissionsManager;
 
-public class DemoActivity extends AppCompatActivity  implements BottomNavigationBar.OnTabSelectedListener {
+public class DemoActivity extends BaseAppCompatActivity implements BottomNavigationBar.OnTabSelectedListener {
 
     String TAG = "";
     private static final int REQUEST_MULTI_PERMISSION = 0x0101;//申请多个权限
@@ -75,22 +82,13 @@ public class DemoActivity extends AppCompatActivity  implements BottomNavigation
     private CartFragment cartFragment;
     private MineFragment mineFragment;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         if(savedInstanceState != null) {
             currentTab = savedInstanceState.getInt("currentTab", 0);
         }
-        initFragments();
 
-        initBottomView();
-        //申请存储、相机、定位权限
-        PermissionsManager.get().requestMultiPermissionsIfNecessary(this, REQUEST_MULTI_PERMISSION);
-        //new IntentIntegrator(this).initiateScan(IntentIntegrator.QR_CODE_TYPES);
-        startActivityForResult(new Intent(this, CaptureActivity.class), 10);
     }
 
     //初始化底部tab
@@ -131,7 +129,7 @@ public class DemoActivity extends AppCompatActivity  implements BottomNavigation
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         hideTab(ft);
-        homeFragment = HomePageFragment.newInstance("");
+        homeFragment = HomePageFragment.newInstance("首页");
         ft.add(R.id.container, homeFragment);
         ft.commit();
     }
@@ -275,6 +273,11 @@ public class DemoActivity extends AppCompatActivity  implements BottomNavigation
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageMain(MessageEvent event) {
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -291,6 +294,62 @@ public class DemoActivity extends AppCompatActivity  implements BottomNavigation
     }
 
     @Override
+    protected int getRootViewLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return true;
+    }
+
+    @Override
+    protected void getBundleExtras(Bundle extras) {
+
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+        initFragments();
+
+        initBottomView();
+        //申请存储、相机、定位权限
+        PermissionsManager.get().requestMultiPermissionsIfNecessary(this, REQUEST_MULTI_PERMISSION);
+        //startActivityForResult(new Intent(this, CaptureActivity.class), 10);
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void onNetworkConnect() {
+
+    }
+
+    @Override
+    protected void onNetworkDisconnect() {
+
+    }
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {
+        return false;
+    }
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {
+        return TransitionMode.LEFT;
+    }
+
+    @Override
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentTab", currentTab);
@@ -299,7 +358,6 @@ public class DemoActivity extends AppCompatActivity  implements BottomNavigation
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        Log.i(TAG, "onRestoreInstanceState: ********");
         currentTab = savedInstanceState.getInt("currentTab", 0);
     }
 

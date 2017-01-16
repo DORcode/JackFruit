@@ -1,6 +1,7 @@
 package com.jackfruit.mall.ui.activity;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 
 import com.baidu.location.BDLocation;
@@ -18,12 +19,16 @@ import com.baidu.mapapi.model.LatLng;
 import com.jackfruit.mall.JFApplication;
 import com.jackfruit.mall.R;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import common.lib.MessageEvent;
 import common.lib.base.BaseAppCompatActivity;
 
 public class LocationActivity extends BaseActivity {
@@ -46,8 +51,6 @@ public class LocationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location);
-        ButterKnife.bind(this);
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
 
         mBaiduMap = mMapView.getMap();
@@ -106,6 +109,10 @@ public class LocationActivity extends BaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+
+    }
     @Override
     protected void onPause() {
         mMapView.onPause();
@@ -131,12 +138,12 @@ public class LocationActivity extends BaseActivity {
 
     @Override
     protected int getRootViewLayoutId() {
-        return 0;
+        return R.layout.activity_location;
     }
 
     @Override
     protected boolean isBindEventBusHere() {
-        return false;
+        return true;
     }
 
     @Override
