@@ -2,8 +2,13 @@ package com.jackfruit.mall;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.jackfruit.mall.bean.DaoMaster;
+import com.jackfruit.mall.bean.DaoSession;
+import com.jackfruit.mall.bean.Demo;
+import com.jackfruit.mall.bean.DemoDao;
 import com.jackfruit.mall.utils.LogRecord;
 import com.jackfruit.mall.utils.PathUtil;
 import com.umeng.socialize.Config;
@@ -27,6 +32,8 @@ public class JFApplication extends Application {
 
     private static Context context;
     private static JFApplication instance;
+    private DaoMaster.DevOpenHelper devOpenHelper;
+    private static DaoSession daoSession;
 
     @Override
     public void onCreate() {
@@ -58,8 +65,19 @@ public class JFApplication extends Application {
 
         PathUtil.init();
         LogRecord.init();
+        initDb();
     }
 
+    private void initDb() {
+        devOpenHelper = new DaoMaster.DevOpenHelper(getApplicationContext(), "mall.db", null);
+        DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
+        daoSession = daoMaster.newSession();
+        daoSession.getDemoDao().insert(new Demo("kh", "111111", "武汉"));
+    }
+
+    public static DaoSession getDaoSession() {
+        return daoSession;
+    }
 
     public static Context getAppContext() {
         return context;
