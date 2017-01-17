@@ -102,6 +102,10 @@ public class LogRecord {
         long present = getLogFileLastestTime();
         File fold = new File(logPath);
         File files[] = fold.listFiles();
+        fold.list();
+        if(files == null) {
+            return;
+        }
         for(int i = 1; i < files.length; i++) {
             File file = files[i];
             long old = getDateFromFileName(file.getName());
@@ -198,6 +202,7 @@ public class LogRecord {
 
         @Override
         public void run() {
+            fileFlag = true;
             createTXTFile();
             deleteTXTFiles();
             try {
