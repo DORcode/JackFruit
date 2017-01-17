@@ -17,7 +17,9 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.jackfruit.mall.JFApplication;
 import com.jackfruit.mall.R;
+import com.jackfruit.mall.bean.Demo;
 import com.jackfruit.mall.bean.DemoBean;
+import com.jackfruit.mall.bean.DemoDao;
 import com.jackfruit.mall.bean.DemoResult;
 import com.jackfruit.mall.http.RetrofitManager;
 import com.jackfruit.mall.ui.fragment.MineFragment;
@@ -27,6 +29,8 @@ import com.jackfruit.mall.ui.fragment.FindFragment;
 import com.jackfruit.mall.ui.fragment.HomePageFragment;
 import com.jackfruit.mall.utils.FragmentNavTabUtil;
 import com.jackfruit.mall.utils.V2Log;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +106,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             initFragments(true);
         }
         String aaa = JFApplication.getDaoSession().getDemoDao().load("111111").toString();
+        QueryBuilder<Demo> queryBuilder = JFApplication.getDaoSession().getDemoDao().queryBuilder();
         Log.d(TAG, "onCreate: " + aaa);
+        queryBuilder.join(Demo.class, DemoDao.Properties.Id);
         //initFragments();
         /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         hideTab(ft);
