@@ -2,6 +2,7 @@ package com.jackfruit.mall.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,8 +20,8 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String aaa = JFApplication.getDaoSession().getDemoDao().load("111111").toString();
-        Toast.makeText(this, aaa, Toast.LENGTH_LONG).show();
+
+
     }
 
     @Override

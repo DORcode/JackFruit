@@ -59,4 +59,13 @@ public class Demo {
     public void setCity(String city) {
         this.city = city;
     }
+
+    @Override
+    public String toString() {
+        return "Demo{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

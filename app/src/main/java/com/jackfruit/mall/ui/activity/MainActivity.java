@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.ashokvarma.bottomnavigation.BadgeItem;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.jackfruit.mall.JFApplication;
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.bean.DemoBean;
 import com.jackfruit.mall.bean.DemoResult;
@@ -100,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             //第一次运行
             initFragments(true);
         }
-
-
+        String aaa = JFApplication.getDaoSession().getDemoDao().load("111111").toString();
+        Log.d(TAG, "onCreate: " + aaa);
         //initFragments();
         /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         hideTab(ft);

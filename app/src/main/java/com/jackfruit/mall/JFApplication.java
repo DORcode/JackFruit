@@ -2,7 +2,9 @@ package com.jackfruit.mall;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.jackfruit.mall.bean.DaoMaster;
@@ -72,7 +74,12 @@ public class JFApplication extends Application {
         devOpenHelper = new DaoMaster.DevOpenHelper(getApplicationContext(), "mall.db", null);
         DaoMaster daoMaster = new DaoMaster(devOpenHelper.getWritableDatabase());
         daoSession = daoMaster.newSession();
-        daoSession.getDemoDao().insert(new Demo("kh", "111111", "武汉"));
+        try {
+            daoSession.getDemoDao().insert(new Demo("kh", "111111", "武汉"));
+        } catch (SQLiteConstraintException e) {
+            Log.d("", "initDb: " + e.toString());
+        }
+
     }
 
     public static DaoSession getDaoSession() {
