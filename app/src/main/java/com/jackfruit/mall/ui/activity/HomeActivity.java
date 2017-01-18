@@ -1,26 +1,22 @@
 package com.jackfruit.mall.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.jackfruit.mall.JFApplication;
 import com.jackfruit.mall.R;
+import com.jackfruit.mall.mvp.HomePresenter;
+import com.jackfruit.mall.mvp.model.HomeModel;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import common.lib.MessageEvent;
-import common.lib.base.BaseAppCompatActivity;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity<HomePresenter, HomeModel>{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
     }
 

@@ -58,10 +58,12 @@ public class RetrofitManager {
         return instance;
     }
 
+
     public ApiService getApiService() {
         return apiService == null ? createService(ApiService.class) : apiService;
     }
 
+    //创建接口服务
     public <T> T createService(Class<T> service) {
         return getRetrofit().create(service);
     }
@@ -74,6 +76,7 @@ public class RetrofitManager {
         getRetrofit();
     }
 
+    //创建Retrofit实例
     public Retrofit getRetrofit() {
         if(retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -86,6 +89,7 @@ public class RetrofitManager {
         return retrofit;
     }
 
+    //创建可变Url Retrofit实例
     public Retrofit getRetrofit(String url) {
         return new Retrofit.Builder()
                 .baseUrl(url)
