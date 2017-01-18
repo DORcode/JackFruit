@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
             //第一次运行
             initFragments(true);
         }
+
         String aaa = JFApplication.getDaoSession().getDemoDao().load("111111").toString();
         QueryBuilder<Demo> queryBuilder = JFApplication.getDaoSession().getDemoDao().queryBuilder();
         Log.d(TAG, "onCreate: " + aaa);
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
         //申请存储、相机、定位权限
         PermissionsManager.get().requestMultiPermissionsIfNecessary(this, REQUEST_MULTI_PERMISSION);
         
-        Subscription subscription = RetrofitManager.getRetrofitManager().getLoginService().getDemoResult()
+        Subscription subscription = RetrofitManager.getInstance().getLoginService().getDemoResult()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSubscriber<DemoResult<DemoBean>>() {

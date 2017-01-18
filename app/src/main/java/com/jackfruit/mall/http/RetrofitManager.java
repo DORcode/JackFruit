@@ -4,14 +4,23 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jackfruit.mall.BuildConfig;
 import com.jackfruit.mall.bean.DemoBean;
 import com.jackfruit.mall.bean.DemoResult;
 import com.jackfruit.mall.http.api.ApiService;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
+import okio.Buffer;
+import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -34,18 +43,31 @@ public class RetrofitManager {
     //读超时
     private static final int READ_TIMEOUT = 300;
     public static final String baseUrl = "http://bobo.yimwing.com/";
-    private static RetrofitManager retrofitManager;
+    private static RetrofitManager instance;
     private Retrofit retrofit;
+    private ApiService apiService;
 
-    public static RetrofitManager getRetrofitManager() {
-        if(retrofitManager == null) {
+    public static RetrofitManager getInstance() {
+        if(instance == null) {
             synchronized (RetrofitManager.class) {
-                if(retrofitManager == null) {
-                    retrofitManager = new RetrofitManager();
+                if(instance == null) {
+                    instance = new RetrofitManager();
                 }
             }
         }
-        return retrofitManager;
+        return instance;
+    }
+
+    public ApiService getApiService() {
+        return apiService == null ? createService(ApiService.class) : apiService;
+    }
+
+    public <T> T createService(Class<T> service) {
+        return getRetrofit().create(service);
+    }
+
+    public <T> T createService(Class<T> service, String url) {
+        return getRetrofit(url).create(service);
     }
 
     public RetrofitManager() {
@@ -53,11 +75,10 @@ public class RetrofitManager {
     }
 
     public Retrofit getRetrofit() {
-        Log.i("", "getRetrofit: ");
         if(retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
-                    .client(getClient().build())
+                    .client(getClient())
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .build();
@@ -68,19 +89,57 @@ public class RetrofitManager {
     public Retrofit getRetrofit(String url) {
         return new Retrofit.Builder()
                 .baseUrl(url)
-                .client(getClient().build())
+                .client(getClient())
+                .addConverterFactory(GsonConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .build();
     }
 
-    public OkHttpClient.Builder getClient() {
-        return new OkHttpClient.Builder()
-                .addInterceptor(new HttpLoggingInterceptor())//添加打印拦截器
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+
+
+    public OkHttpClient getClient() {
+        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+        //添加头部header配置的拦截器
+        Interceptor headInterceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request.Builder builder = new Request.Builder();
+                //Platform,Version
+
+                //builder.addHeader();
+                builder.removeHeader("Accept");
+                //加入Token
+                Request request = builder.build();
+
+                return chain.proceed(request);
+            }
+        };
+
+        //Log信息拦截器
+        if(BuildConfig.DEBUG) {
+            Interceptor logInterceptor = new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request request = chain.request();
+                    Response response = chain.proceed(request);
+                    ResponseBody responseBody = response.body();
+                    BufferedSource bufferedSource = responseBody.source();
+                    bufferedSource.request(Long.MAX_VALUE);
+                    Buffer buffer = bufferedSource.buffer();
+                    Charset UTF8 = Charset.forName("UTF-8");
+                    Log.d("REQUEST_JSON", "intercept: " + buffer.clone().readString(UTF8));
+                    Log.d("REQUEST_URL", request.toString());
+                    return response;
+                }
+            };
+            okHttpClient.addInterceptor(logInterceptor);
+        }
+        okHttpClient.connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
-                ;
+                .retryOnConnectionFailure(true);
+        //okHttpClient.addInterceptor(headInterceptor);
+        return okHttpClient.build();
     }
 
     private Gson getGson() {
@@ -96,7 +155,6 @@ public class RetrofitManager {
      * @return
      */
     public ApiService getLoginService() {
-        Log.i("", "getLoginService: ");
         return retrofit.create(ApiService.class);
     }
 }
