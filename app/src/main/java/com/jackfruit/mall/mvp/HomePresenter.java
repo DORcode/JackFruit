@@ -1,5 +1,12 @@
 package com.jackfruit.mall.mvp;
 
+import com.jackfruit.mall.bean.DemoBean;
+import com.jackfruit.mall.bean.DemoResult;
+import com.jackfruit.mall.http.RetrofitManager;
+
+import common.lib.rx.BaseSubscriber;
+import common.lib.utils.ExceptionHandle;
+
 /**
  * @项目名称 JackFruit
  * @类：com.jackfruit.mall.mvp
@@ -11,5 +18,17 @@ package com.jackfruit.mall.mvp;
  */
 
 public class HomePresenter extends HomeContract.Presenter {
+    void aaa(int id) {
+        addSubscription(RetrofitManager.getInstance().getApiService().getDemoResult().subscribe(new BaseSubscriber<DemoResult<DemoBean>>() {
+            @Override
+            public void onError(Throwable e) {
+                mView.showError(ExceptionHandle.handleException(e).message);
+            }
 
+            @Override
+            public void onNext(DemoResult<DemoBean> demoBeanDemoResult) {
+
+            }
+        }));
+    }
 }
