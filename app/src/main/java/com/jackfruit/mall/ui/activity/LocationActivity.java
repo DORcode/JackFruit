@@ -31,7 +31,7 @@ import butterknife.OnClick;
 import common.lib.MessageEvent;
 import common.lib.base.BaseAppCompatActivity;
 
-public class LocationActivity extends BaseActivity {
+public class LocationActivity extends BaseMVPActivity {
 
     @BindView(R.id.mv_map)
     MapView mMapView;

@@ -21,6 +21,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import common.lib.MessageEvent;
 import common.lib.loading.VaryViewHelperController;
+import common.lib.mvp.BaseModel;
+import common.lib.mvp.BasePresenter;
 
 /**
  * @项目名称 JackFruit
@@ -247,16 +249,6 @@ public abstract class BaseLazyFragment extends Fragment {
 
     protected FragmentManager getSupportFragmentManager() {
         return getActivity().getSupportFragmentManager();
-    }
-
-    /**
-     * startActivity
-     *
-     * @param clazz
-     */
-    protected void readyGo(Class<?> clazz) {
-        Intent intent = new Intent(getActivity(), clazz);
-        startActivity(intent);
     }
 
     protected void gotoActivity(Class clx) {

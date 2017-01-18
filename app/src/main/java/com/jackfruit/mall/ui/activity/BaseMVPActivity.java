@@ -13,17 +13,34 @@ import common.lib.utils.TUtil;
  *@author kh
  *create at  
  */
-public abstract class BaseActivity extends BaseAppCompatActivity implements BaseView {
-
+public abstract class BaseMVPActivity<P extends BasePresenter, M extends BaseModel> extends BaseAppCompatActivity implements BaseView {
+    protected P mPresenter;
+    protected M mModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //获取父类Presenter实例
+        mPresenter = TUtil.getT(this, 0);
+        //获取父类Model实例
+        mModel = TUtil.getT(this, 1);
+        if(this instanceof BaseView) {
+            if(mPresenter != null) {
+                //在mPresenter中绑定view和model
+                mPresenter.attacth(this, mModel);
+            } else {
+                throw new IllegalArgumentException("GenericSuperclass Can not null");
+            }
 
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mPresenter != null) {
+            mPresenter.detach();
+            mPresenter.onDestory();
+        }
     }
 
     @Override

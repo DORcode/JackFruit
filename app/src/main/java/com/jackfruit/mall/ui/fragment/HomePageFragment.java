@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.ui.activity.DemoActivity;
+import com.jackfruit.mall.ui.activity.HomeActivity;
 import com.jackfruit.mall.ui.activity.PlaylistActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -24,6 +25,7 @@ public class HomePageFragment extends BaseLazyFragment {
     private static final String ARG_PARAM1 = "param1";
 
     public HomePageFragment() {
+
     }
 
     public static HomePageFragment newInstance(String param1) {
@@ -92,7 +94,7 @@ public class HomePageFragment extends BaseLazyFragment {
                 startActivity(new Intent(getActivity(), DemoActivity.class));
                 break;
             case R.id.tv_homepage:
-                gotoActivity(PlaylistActivity.class);
+                gotoActivity(HomeActivity.class);
                 break;
         }
 

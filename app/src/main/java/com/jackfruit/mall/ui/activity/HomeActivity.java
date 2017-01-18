@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.jackfruit.mall.R;
+import com.jackfruit.mall.mvp.HomeContract;
 import com.jackfruit.mall.mvp.HomePresenter;
 import com.jackfruit.mall.mvp.model.HomeModel;
 
@@ -12,12 +13,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import common.lib.MessageEvent;
 
-public class HomeActivity extends BaseActivity<HomePresenter, HomeModel>{
+public class HomeActivity extends BaseMVPActivity<HomePresenter, HomeModel> implements HomeContract.View{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mPresenter.aaa(1);
+        mPresenter.detach();
+        mPresenter.onDestory();
     }
 
     @Override

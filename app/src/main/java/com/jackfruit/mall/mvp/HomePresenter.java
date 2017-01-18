@@ -18,10 +18,15 @@ import common.lib.utils.ExceptionHandle;
  */
 
 public class HomePresenter extends HomeContract.Presenter {
-    void aaa(int id) {
+    public void aaa(int id) {
         addSubscription(RetrofitManager.getInstance().getApiService().getDemoResult().subscribe(new BaseSubscriber<DemoResult<DemoBean>>() {
             @Override
             public void onError(Throwable e) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
                 mView.showError(ExceptionHandle.handleException(e).message);
             }
 
