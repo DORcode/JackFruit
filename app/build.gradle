@@ -30,11 +30,21 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 
+
+
     /*sourceSets {
         main {
             java.srcDirs = ['src/main/java', 'src-gem']
         }
     }*/
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'com.jackfruit.mall.greendao'
+    targetGenDir 'src/main/java'
+    generateTests true
+    targetGenDirTests 'src/test/java'
 }
 
 dependencies {
