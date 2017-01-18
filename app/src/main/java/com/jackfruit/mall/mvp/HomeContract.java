@@ -13,13 +13,12 @@ import common.lib.mvp.BaseView;
  * @修改
  * @修改时期 2017/1/18 14:56
  */
-
 public interface HomeContract {
-    public interface View extends BaseView {
+    interface View extends BaseView {
 
     }
 
-    public interface Model extends BaseModel {
+    interface Model extends BaseModel {
 
     }
 
