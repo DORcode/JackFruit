@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.jackfruit.mall.bean.DaoMaster;
-import com.jackfruit.mall.bean.DaoSession;
 import com.jackfruit.mall.bean.Demo;
-import com.jackfruit.mall.bean.DemoDao;
+import com.jackfruit.mall.greendao.DaoMaster;
+import com.jackfruit.mall.greendao.DaoSession;
 import com.jackfruit.mall.utils.LogRecord;
 import com.jackfruit.mall.utils.PathUtil;
 import com.umeng.socialize.Config;
@@ -35,7 +34,7 @@ public class JFApplication extends Application {
     private static Context context;
     private static JFApplication instance;
     private DaoMaster.DevOpenHelper devOpenHelper;
-    private static DaoSession daoSession;
+    private DaoSession daoSession;
 
     @Override
     public void onCreate() {
@@ -82,7 +81,7 @@ public class JFApplication extends Application {
 
     }
 
-    public static DaoSession getDaoSession() {
+    public DaoSession getDaoSession() {
         return daoSession;
     }
 
