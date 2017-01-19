@@ -30,7 +30,9 @@ android {
         exclude 'META-INF/NOTICE.txt'
     }
 
-
+    dataBinding {
+        enabled = true;
+    }
 
     /*sourceSets {
         main {

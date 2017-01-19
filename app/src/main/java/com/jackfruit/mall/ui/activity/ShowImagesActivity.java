@@ -1,79 +1,38 @@
 package com.jackfruit.mall.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 
 import com.jackfruit.mall.R;
-import com.lib.imageselector.ImageSelectorActivity;
+import com.jackfruit.mall.databinding.ActivityShowImagesBinding;
+import com.lib.imageselector.ui.ImageSelectorActivity;
 
-import butterknife.OnClick;
-import common.lib.MessageEvent;
-import common.lib.base.BaseAppCompatActivity;
-
-public class ShowImagesActivity extends BaseActivity {
+public class ShowImagesActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityShowImagesBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_show_images);
+
+        binding.selectImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ShowImagesActivity.this, ImageSelectorActivity.class));
+            }
+        });
     }
 
-    @Override
-    protected int getRootViewLayoutId() {
-        return R.layout.activity_show_images;
-    }
 
-    @Override
-    protected boolean isBindEventBusHere() {
-        return false;
-    }
 
-    @Override
-    protected void getBundleExtras(Bundle extras) {
-
-    }
-
-    @Override
-    protected void initViewsAndEvents() {
-
-    }
-
-    @Override
-    protected View getLoadingTargetView() {
-        return null;
-    }
-
-    @Override
-    protected void onNetworkConnect() {
-
-    }
-
-    @Override
-    protected void onNetworkDisconnect() {
-
-    }
-
-    @Override
-    protected boolean toggleOverridePendingTransition() {
-        return false;
-    }
-
-    @Override
-    protected TransitionMode getOverridePendingTransitionMode() {
-        return null;
-    }
-
-    @Override
-    public void onMessageEvent(MessageEvent event) {
-
-    }
-
-    @OnClick({R.id.select_image_button})
+    /*@OnClick({R.id.select_image_button})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.select_image_button:
                 gotoActivity(ImageSelectorActivity.class);
                 break;
         }
-    }
+    }*/
 }
