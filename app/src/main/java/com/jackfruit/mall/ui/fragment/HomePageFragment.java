@@ -9,6 +9,7 @@ import com.jackfruit.mall.R;
 import com.jackfruit.mall.ui.activity.DemoActivity;
 import com.jackfruit.mall.ui.activity.HomeActivity;
 import com.jackfruit.mall.ui.activity.PlaylistActivity;
+import com.jackfruit.mall.ui.activity.ShowImagesActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -87,7 +88,7 @@ public class HomePageFragment extends BaseLazyFragment {
 
     }
 
-    @OnClick({R.id.tv_home, R.id.tv_homepage})
+    @OnClick({R.id.tv_home, R.id.tv_homepage, R.id.show_image_text})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_home:
@@ -96,6 +97,8 @@ public class HomePageFragment extends BaseLazyFragment {
             case R.id.tv_homepage:
                 gotoActivity(HomeActivity.class);
                 break;
+            case R.id.show_image_text:
+                gotoActivity(ShowImagesActivity.class);
         }
 
     }

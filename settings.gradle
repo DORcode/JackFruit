@@ -1,1 +1,1 @@
-include ':app', ':lib-zxing', ':baidu_lib', ':umeng_lib', ':app_lib', ':xrecyclerview', ':zoomlibrary'
+include ':app', ':lib-zxing', ':baidu_lib', ':umeng_lib', ':app_lib', ':xrecyclerview', ':zoomlibrary', ':imageselector_lib'

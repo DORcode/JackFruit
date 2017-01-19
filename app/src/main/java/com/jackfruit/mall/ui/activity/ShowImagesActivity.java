@@ -1,31 +1,26 @@
 package com.jackfruit.mall.ui.activity;
 
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.jackfruit.mall.R;
-import com.jackfruit.mall.mvp.HomeContract;
-import com.jackfruit.mall.mvp.HomePresenter;
-import com.jackfruit.mall.mvp.model.HomeModel;
+import com.lib.imageselector.ImageSelectorActivity;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
+import butterknife.OnClick;
 import common.lib.MessageEvent;
+import common.lib.base.BaseAppCompatActivity;
 
-public class HomeActivity extends BaseMVPActivity<HomePresenter, HomeModel> implements HomeContract.View{
+public class ShowImagesActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.aaa(1);
-        mPresenter.onDestory();
-        mPresenter.detach();
     }
 
     @Override
     protected int getRootViewLayoutId() {
-        return R.layout.activity_home;
+        return R.layout.activity_show_images;
     }
 
     @Override
@@ -65,12 +60,20 @@ public class HomeActivity extends BaseMVPActivity<HomePresenter, HomeModel> impl
 
     @Override
     protected TransitionMode getOverridePendingTransitionMode() {
-        return TransitionMode.LEFT;
+        return null;
     }
 
     @Override
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
 
+    }
+
+    @OnClick({R.id.select_image_button})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.select_image_button:
+                gotoActivity(ImageSelectorActivity.class);
+                break;
+        }
     }
 }

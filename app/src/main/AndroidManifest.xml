@@ -55,14 +55,16 @@
             android:name=".ui.activity.SplashActivity"
             android:label="@string/title_activity_splash"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activity.DemoActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".ui.activity.DemoActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".ui.activity.LocationActivity" />
         <activity android:name=".ui.activity.HomeActivity" />
         <activity
             android:name=".ui.activity.PlaylistActivity"
             android:label="@string/title_activity_playlist"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ui.activity.ShowImagesActivity"></activity>
     </application>
 
 </manifest>
