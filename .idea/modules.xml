@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app_lib/app_lib.iml" filepath="$PROJECT_DIR$/app_lib/app_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/baidu_lib/baidu_lib.iml" filepath="$PROJECT_DIR$/baidu_lib/baidu_lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/imageselector_lib/imageselector_lib.iml" filepath="$PROJECT_DIR$/imageselector_lib/imageselector_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib-zxing/lib-zxing.iml" filepath="$PROJECT_DIR$/lib-zxing/lib-zxing.iml" />
       <module fileurl="file://$PROJECT_DIR$/umeng_lib/umeng_lib.iml" filepath="$PROJECT_DIR$/umeng_lib/umeng_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" filepath="$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" />
