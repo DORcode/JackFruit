@@ -107,10 +107,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
 
-            imageHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            imageHolder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(context, "" + pos, Toast.LENGTH_LONG).show();
+                    Log.d("", "onClick: " + mediaInfo.getPath());
                     onImageSelectorItemListener.onImageClick(pos);
                 }
             });

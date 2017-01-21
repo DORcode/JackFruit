@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -54,6 +55,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         imageRecyclerView = (RecyclerView) findViewById(R.id.image_recyclerview);
         imageListAdapter = new ImageListAdapter(context, true, selectedMaxNum);
         imageListAdapter.setOnImageSelectorItemListener(this);
@@ -116,6 +118,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
 
     @Override
     public void onImageClick(int position) {
+        Log.d(TAG, "onImageClick: " + showMediaList.get(position).getPath());
         ImagePreviewActivity.start(this, currentFold, selectedImages, selectedMaxNum, position);
     }
 

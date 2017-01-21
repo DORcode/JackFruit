@@ -2,4 +2,5 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="content_grey">#353535</color>
+    <color name="bar_grey_90">#dd393a3e</color>
 </resources>

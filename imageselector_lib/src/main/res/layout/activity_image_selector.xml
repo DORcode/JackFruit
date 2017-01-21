@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.lib.imageselector.ui.activity.ImageSelectorActivity">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/image_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -15,20 +20,19 @@
             android:layout_height="wrap_content" />
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/image_recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 
     <RelativeLayout
         android:id="@+id/image_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@color/bar_grey_90">
         <LinearLayout
             android:id="@+id/fold_select_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/fold_selected_name"
@@ -40,6 +44,13 @@
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_image_arrow"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/preview_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/preview_selected_text"/>
     </RelativeLayout>
 
     <ProgressBar

@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.lib.imageselector.R;
 import com.lib.imageselector.beans.MediaInfo;
+import com.lib.imageselector.ui.widget.PreviewViewPager;
 import com.lib.imageselector.utils.MediaLoader;
 
 import java.util.ArrayList;
@@ -78,10 +80,11 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
     }
 
     private void initView() {
-        viewpager = (ViewPager) findViewById(R.id.viewpager);
+        viewpager = (PreviewViewPager) findViewById(R.id.viewpager);
         imageAdapter = new ImagePagerAdapter();
         viewpager.setAdapter(imageAdapter);
         viewpager.setCurrentItem(currentPosition);
+        Log.d(TAG, "initView: " + mediaList.get(currentPosition).getPath());
         viewpager.addOnPageChangeListener(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle((currentPosition + 1) + "/" + mediaList.size());
@@ -90,6 +93,9 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         completeText.setText("完成(" + selectedList.size() + "/" + maxSelectNum + ")");
 
         imageSelectCB = (CheckBox) findViewById(R.id.cb_image_select);
+        if(mediaList.get(currentPosition).isChecked()) {
+            imageSelectCB.setChecked(true);
+        }
         imageSelectCB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,14 +120,20 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
 
     @Override
     public void onPageSelected(int position) {
+        Log.d(TAG, "onPageSelected: " + position);
         MediaInfo m = mediaList.get(position);
         currentPosition = position;
         toolbar.setTitle((currentPosition + 1) + "/" + mediaList.size());
-        if(m.isChecked()) {
+        if(selectedList.contains(m)) {
             imageSelectCB.setChecked(true);
         } else {
             imageSelectCB.setChecked(false);
         }
+        /*if(m.isChecked()) {
+            imageSelectCB.setChecked(true);
+        } else {
+            imageSelectCB.setChecked(false);
+        }*/
     }
 
     @Override
@@ -153,11 +165,11 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
             final PhotoView photoView = (PhotoView) view.findViewById(R.id.big_image_view);
             final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 
-            if(selectedList.contains(image)) {
+            /*if(selectedList.contains(image)) {
                 imageSelectCB.setChecked(true);
             } else {
                 imageSelectCB.setChecked(false);
-            }
+            }*/
             progressBar.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(image.getPath())
@@ -184,18 +196,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
                         }
                     })
                     .into(photoView);
-            imageSelectCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked) {
-                        image.setChecked(true);
-                        selectedList.add(image);
-                    } else {
-                        image.setChecked(false);
-                        selectedList.remove(image);
-                    }
-                }
-            });
+
             container.addView(view, 0);
             photoView.setOnPhotoTapListener(ImagePreviewActivity.this);
 

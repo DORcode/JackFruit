@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.lib.imageselector.ui.activity.ImagePreviewActivity">
 
-    <android.support.v4.view.ViewPager
+    <com.lib.imageselector.ui.widget.PreviewViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -23,7 +23,13 @@
             android:textColor="#fff"
             android:id="@+id/tv_complete"/>
     </android.support.v7.widget.Toolbar>
-
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -68,4 +68,20 @@ public class MediaInfo implements Serializable {
     public void setChecked(boolean checked) {
         isChecked = checked;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MediaInfo mediaInfo = (MediaInfo) o;
+
+        return path.equals(mediaInfo.path);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
 }
