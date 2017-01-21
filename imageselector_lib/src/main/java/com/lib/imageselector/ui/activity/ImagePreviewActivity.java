@@ -165,15 +165,10 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
             final PhotoView photoView = (PhotoView) view.findViewById(R.id.big_image_view);
             final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 
-            /*if(selectedList.contains(image)) {
-                imageSelectCB.setChecked(true);
-            } else {
-                imageSelectCB.setChecked(false);
-            }*/
             progressBar.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(image.getPath())
-                    .crossFade(700)
+                    .crossFade()
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
