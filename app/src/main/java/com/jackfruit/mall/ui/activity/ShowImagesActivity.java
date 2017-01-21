@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.databinding.ActivityShowImagesBinding;
-import com.lib.imageselector.ui.ImageSelectorActivity;
+import com.lib.imageselector.ui.activity.ImageSelectorActivity;
 
 public class ShowImagesActivity extends Activity {
 

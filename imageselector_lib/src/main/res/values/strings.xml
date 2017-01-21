@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ImageSelector</string>
+
+    <string name="image_fold_name">所有图片</string>
+    <string name="take_photo">拍照</string>
+    <string name="tv_complete_text">完成</string>
+    <string name="image_select_text">选择</string>
+
 </resources>

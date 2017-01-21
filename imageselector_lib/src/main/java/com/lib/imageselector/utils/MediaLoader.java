@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.lib.imageselector.beans.MediaFolder;
@@ -13,6 +14,7 @@ import com.lib.imageselector.beans.MediaInfo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @项目名称 JackFruit
@@ -74,16 +76,15 @@ public class MediaLoader {
             MediaStore.Audio.Media.ALBUM_KEY
     };
 
-    public static MediaLoader getInstance() {
+    public static MediaLoader getInstance(Context context) {
         if(instance == null) {
-            instance = new MediaLoader();
+            instance = new MediaLoader(context);
         }
-
         return instance;
     }
 
-    public void init(Context context) {
-        context = context.getApplicationContext();
+    public MediaLoader(Context context) {
+        this.context = context.getApplicationContext();
         cr = context.getContentResolver();
     }
 
@@ -92,6 +93,7 @@ public class MediaLoader {
      * @return
      */
     public List<MediaFolder> getImageFolders() {
+        long time = System.currentTimeMillis();
         folders = new ArrayList<MediaFolder>();
         Cursor cursor = MediaStore.Images.Media.query(cr,MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGES_PROJECTION, null, MediaStore.Images.Media.DATE_ADDED + " desc");
         MediaFolder allImageFolder = new MediaFolder("all images", "所有图片");
@@ -107,7 +109,7 @@ public class MediaLoader {
             String dateModified = cursor.getString(cursor.getColumnIndex(IMAGES_PROJECTION[2]));
             //名称
             String name = cursor.getString(cursor.getColumnIndex(IMAGES_PROJECTION[3]));
-            Log.d(TAG, "getMediaFolders: " + path);
+            //Log.d(TAG, "getMediaFolders: " + path);
             //图片file对象
             File imageFile = new File(path);
 
@@ -120,21 +122,24 @@ public class MediaLoader {
             //加入到所有图片列表中
             allImageInfo.add(image);
 
-            //从文件夹列表中查找
-            MediaFolder folder = getMediaFolder(path);
+            //从文件夹列表中查找该图片文件夹是否已出现
+            subFolder = getMediaFolder(parentPath);
 
             //该图片所在文件夹未出现
-            if(folder == null) {
+            if(subFolder == null) {
+                Log.d(TAG, "getImageFolders: " + parentPath + "_" + parentName);
+                Log.d(TAG, "getImageFolders: " + (System.currentTimeMillis() - time));
                 subFolder = new MediaFolder(parentPath, parentName);
                 folders.add(subFolder);
                 subFolder.getList().add(image);
             } else {
-                folder.addMedia(image);
+                subFolder.addMedia(image);
             }
 
         }
         allImageFolder.setList(allImageInfo);
         folders.add(0, allImageFolder);
+        Log.d(TAG, "getImageFolders: " + (System.currentTimeMillis() - time));
         cursor.close();
         return folders;
     }
@@ -160,5 +165,9 @@ public class MediaLoader {
             }
         }
         return null;
+    }
+
+    public List<MediaInfo> getMediaListFromFoldList(int position) {
+        return folders.get(position).getList();
     }
 }

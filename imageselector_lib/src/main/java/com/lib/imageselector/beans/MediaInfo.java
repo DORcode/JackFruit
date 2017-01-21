@@ -1,5 +1,7 @@
 package com.lib.imageselector.beans;
 
+import java.io.Serializable;
+
 /**
  * @项目名称 JackFruit
  * @类：com.lib.imageselector.beans
@@ -9,7 +11,7 @@ package com.lib.imageselector.beans;
  * @修改
  * @修改时期 2017/1/19 13:54
  */
-public class MediaInfo {
+public class MediaInfo implements Serializable {
     private String path;
     private String name;
     private MediaType type = MediaType.IMAGE;
@@ -25,5 +27,45 @@ public class MediaInfo {
 
     public enum MediaType {
         IMAGE, VIDEO
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public MediaType getType() {
+        return type;
+    }
+
+    public void setType(MediaType type) {
+        this.type = type;
+    }
+
+    public String getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(String dateModified) {
+        this.dateModified = dateModified;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }
