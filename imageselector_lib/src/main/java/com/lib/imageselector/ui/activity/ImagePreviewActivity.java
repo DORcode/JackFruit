@@ -50,7 +50,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
     private Context context;
     private int foldPosition;
     //图片列表
-    private List<MediaInfo> mediaList;
+    private List<MediaInfo> mediaList = new ArrayList<MediaInfo>();
     //选中图片列表
     private List<MediaInfo> selectedImages;
     //预览图片类型
@@ -91,7 +91,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         maxSelectNum = getIntent().getIntExtra(EXTRA_SELECTED_MAXMUM, 0);
         currentPosition = getIntent().getIntExtra(EXTRA_POSITION, 0);
         if(previewType == 1) {
-            mediaList = selectedImages;
+            mediaList.addAll(selectedImages);
         } else {
             mediaList = MediaLoader.getInstance(this).getMediaListFromFoldList(foldPosition);
         }
@@ -111,7 +111,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         toolbar.setTitle((currentPosition + 1) + "/" + mediaList.size());
 
         completeText = (TextView) findViewById(R.id.tv_complete);
-        completeText.setText("完成(" + selectedImages.size() + "/" + maxSelectNum + ")");
+        setCompleteText();
 
         imageSelectCB = (CheckBox) findViewById(R.id.cb_image_select);
         mSelectLayout = (FrameLayout) findViewById(R.id.select_layout);
@@ -136,7 +136,8 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
                     selectedImages.remove(m);
                     imageSelectCB.setChecked(false);
                 }
-                imageAdapter.notifyDataSetChanged();
+                setCompleteText();
+                //imageAdapter.notifyDataSetChanged();
             }
         });
 
@@ -146,7 +147,8 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
                 if(selectedImages.size() == 9) {
                     if(isChecked) {
                         if(!mediaList.get(currentPosition).isChecked()) {
-                            buttonView.setChecked(false);
+                            imageSelectCB.setChecked(false);
+                            //buttonView.setChecked(false);
                         }
 
                     }
@@ -154,6 +156,10 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
             }
         });
 
+    }
+
+    private void setCompleteText() {
+        completeText.setText("完成(" + selectedImages.size() + "/" + maxSelectNum + ")");
     }
 
     @Override

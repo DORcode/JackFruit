@@ -78,11 +78,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             final ImageHolder imageHolder = (ImageHolder) holder;
             final int pos = isShowCamera ? position -1 : position;
             final MediaInfo mediaInfo = list.get(pos);
-            if(selectedImages.contains(mediaInfo)) {
-                imageHolder.checkbox.setSelected(true);
-            } else {
-                imageHolder.checkbox.setSelected(false);
-            }
+
 
             Glide.with(context)
                     .load(new File(mediaInfo.getPath()))
@@ -91,7 +87,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .placeholder(R.mipmap.ic_placeholder)
                     .into(imageHolder.image);
 
-            imageHolder.checkbox.setOnClickListener(new View.OnClickListener() {
+            /*imageHolder.checkbox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(selectedImages.size() == 9 && !mediaInfo.isChecked()) {
@@ -112,18 +108,36 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                     onImageSelectorItemListener.onImageSelect(selectedImages);
                 }
-            });
+            });*/
 
-            /*imageHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            imageHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(selectedImages.size() == 9) {
                         if(isChecked == true) {
-                            buttonView.setChecked(false);
+                            if(!mediaInfo.isChecked()) {
+                                imageHolder.checkbox.setChecked(false);
+                                //buttonView.setChecked(false);
+                            }
                         }
                     }
+
+                    if(selectedImages.size() == 9 && !mediaInfo.isChecked() && isChecked) {
+                        Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if(isChecked) {
+                        if(!mediaInfo.isChecked()) selectedImages.add(mediaInfo);
+
+                    } else {
+                        if(mediaInfo.isChecked()) selectedImages.remove(mediaInfo);
+                    }
+                    mediaInfo.setChecked(isChecked);
+
+                    onImageSelectorItemListener.onImageSelect(selectedImages);
                 }
-            });*/
+            });
 
             imageHolder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,6 +147,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     onImageSelectorItemListener.onImageClick(pos);
                 }
             });
+            imageHolder.checkbox.setChecked(mediaInfo.isChecked());
         }
     }
 
