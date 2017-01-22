@@ -57,4 +57,19 @@ public class MediaFolder {
             list.add(mi);
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MediaFolder that = (MediaFolder) o;
+
+        return path.equals(that.path);
+    }
+
+    @Override
+    public int hashCode() {
+        return  path.hashCode();
+    }
 }

@@ -1,6 +1,5 @@
 package com.lib.imageselector.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,9 +14,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.lib.imageselector.R;
 import com.lib.imageselector.beans.MediaInfo;
-import com.lib.imageselector.ui.activity.ImagePreviewActivity;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,21 +68,20 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if(getItemViewType(position) == ITEM_TYPE_CAMERA) {
             CameraHolder cameraHolder = (CameraHolder) holder;
-            //cameraHolder.camera.setImageResource(R.mipmap.ic_camera);
             cameraHolder.camera.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    onImageSelectorItemListener.onTakePhoto();
                 }
             });
         } else {
-            ImageHolder imageHolder = (ImageHolder) holder;
+            final ImageHolder imageHolder = (ImageHolder) holder;
             final int pos = isShowCamera ? position -1 : position;
             final MediaInfo mediaInfo = list.get(pos);
             if(selectedImages.contains(mediaInfo)) {
-                imageHolder.checkbox.setChecked(true);
+                imageHolder.checkbox.setSelected(true);
             } else {
-                imageHolder.checkbox.setChecked(false);
+                imageHolder.checkbox.setSelected(false);
             }
 
             Glide.with(context)
@@ -96,16 +94,36 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             imageHolder.checkbox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(selectedImages.size() == 9 && !mediaInfo.isChecked()) {
+                        Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    //选中图片
                     if(!mediaInfo.isChecked()) {
+
                         mediaInfo.setChecked(true);
                         selectedImages.add(mediaInfo);
-                    } else {
+                        imageHolder.checkbox.setChecked(true);
+                    } else {//取消选中
                         mediaInfo.setChecked(false);
                         selectedImages.remove(mediaInfo);
+                        imageHolder.checkbox.setChecked(false);
                     }
                     onImageSelectorItemListener.onImageSelect(selectedImages);
                 }
             });
+
+            /*imageHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(selectedImages.size() == 9) {
+                        if(isChecked == true) {
+                            buttonView.setChecked(false);
+                        }
+                    }
+                }
+            });*/
 
             imageHolder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -140,6 +158,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         isShowCamera = showCamera;
     }
 
+    //图片
     class ImageHolder extends RecyclerView.ViewHolder {
         ImageView image;
         CheckBox checkbox;
@@ -153,9 +172,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private void init(View itemView) {
             image = (ImageView) itemView.findViewById(R.id.image);
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            //checkbox = (ImageView) itemView.findViewById(R.id.checkbox);
         }
     }
 
+    //照相
     class CameraHolder extends RecyclerView.ViewHolder {
         ImageView camera;
 

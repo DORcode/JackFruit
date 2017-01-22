@@ -1,15 +1,26 @@
 package com.lib.imageselector.ui.activity;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -21,13 +32,19 @@ import com.lib.imageselector.R;
 import com.lib.imageselector.beans.MediaFolder;
 import com.lib.imageselector.beans.MediaInfo;
 import com.lib.imageselector.ui.adapter.ImageListAdapter;
+import com.lib.imageselector.ui.widget.GridSpacingItemDecoration;
 import com.lib.imageselector.utils.MediaLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+
 public class ImageSelectorActivity extends AppCompatActivity implements ImageListAdapter.OnImageSelectorItemListener {
     private static final String TAG = "ImageSelectorActivity";
+    private static final String EXTRA_SELECTED_IMAGES = "selected_images";
+    private static final String EXTRA_SELECTED_MAXMUM = "max_selected_num";
+    private static final String EXTRA_CAMERA_ISSHOW = "camera_isshow";
     //是否显示拍照按钮
     private boolean isShowCamera = true;
     //列表中是否显示视频
@@ -36,7 +53,10 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     private int selectedMaxNum = 9;
     private Context context;
     Toolbar toolbar;
-    RecyclerView imageRecyclerView;
+    private ActionBar actionBar;
+    private RecyclerView imageRecyclerView;
+    private TextView mCompleteSelectedTV;
+    private FrameLayout mFoldSelectFL;
     private ProgressBar progressBar;
     private List<MediaFolder> folderList = new ArrayList<MediaFolder>();
     private List<MediaInfo> showMediaList = new ArrayList<MediaInfo>();
@@ -44,26 +64,119 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     private ImageListAdapter imageListAdapter;
     //当前所选图片文件夹位置
     private int currentFold = 0;
+    //图片文件夹列表
+    private RecyclerView folderListRV;
+    //文件夹列表点击按钮
+    private LinearLayout folderSelectLayout;
+    //图片文件夹列表对话框
+    private BottomSheetDialog bottomSheetDialog;
+    //预览按钮
+    private TextView previewText;
+
+    public static void start(Activity activity, List<MediaInfo> selected, int max, boolean isShowCamera) {
+        Intent intent = new Intent(activity, ImageSelectorActivity.class);
+        intent.putExtra(EXTRA_SELECTED_IMAGES, (ArrayList) selected);
+        intent.putExtra(EXTRA_SELECTED_MAXMUM, max);
+        intent.putExtra(EXTRA_CAMERA_ISSHOW, isShowCamera);
+        activity.startActivityForResult(intent, 1);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_selector);
         context = this;
         initView();
+        initListener();
         getAllImageFolderList();
     }
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.mipmap.ic_actionbar_back);
+        toolbar.setTitle("图片选择");
+        //setSupportActionBar(toolbar);
+        mCompleteSelectedTV = (TextView) findViewById(R.id.image_selected_number);
+        //设置完成按钮显示选择图片数量
+        setCompleteText();
         imageRecyclerView = (RecyclerView) findViewById(R.id.image_recyclerview);
         imageListAdapter = new ImageListAdapter(context, true, selectedMaxNum);
         imageListAdapter.setOnImageSelectorItemListener(this);
-        imageRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        imageRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        imageRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, 4, false));
         imageRecyclerView.hasFixedSize();
         imageRecyclerView.setAdapter(imageListAdapter);
+        mFoldSelectFL = (FrameLayout) findViewById(R.id.image_bottom_line);
+        folderSelectLayout = (LinearLayout) findViewById(R.id.fold_select_layout);
+        previewText = (TextView) findViewById(R.id.preview_selected);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        folderListRV = (RecyclerView) LayoutInflater.from(this).inflate(R.layout.layout_folders_dialog, null);
+        bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(folderListRV);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void initListener() {
+        //返回键
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //完成
+        mCompleteSelectedTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        //文件夹对话框按钮
+        folderSelectLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.show();
+            }
+        });
+
+        previewText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedImages.size() == 0) {
+                    return;
+                }
+                startPreview(0, ImagePreviewActivity.PREVIEW_SELECTED_IMAGE);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case RESULT_OK:
+
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void setCompleteText() {
+        if(selectedImages.size() == 0) {
+            mCompleteSelectedTV.setText("完成");
+        } else {
+            mCompleteSelectedTV.setText("完成(" + selectedImages.size() + "/" + selectedMaxNum + ")");
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -107,23 +220,32 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         if(flag) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
-            progressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(GONE);
         }
     }
 
     @Override
     public void onTakePhoto() {
-
+        takePhoto();
     }
 
     @Override
     public void onImageClick(int position) {
         Log.d(TAG, "onImageClick: " + showMediaList.get(position).getPath());
-        ImagePreviewActivity.start(this, currentFold, selectedImages, selectedMaxNum, position);
+        startPreview(position, ImagePreviewActivity.PREVIEW_FOLD_IMAGE);
     }
 
     @Override
     public void onImageSelect(List<MediaInfo> medias) {
         selectedImages = medias;
+        setCompleteText();
+    }
+
+    private void takePhoto() {
+
+    }
+
+    private void startPreview(int position, int type) {
+        ImagePreviewActivity.start(this, currentFold, selectedImages, selectedMaxNum, position, type);
     }
 }

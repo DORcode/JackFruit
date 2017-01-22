@@ -24,15 +24,4 @@ public class ShowImagesActivity extends Activity {
             }
         });
     }
-
-
-
-    /*@OnClick({R.id.select_image_button})
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.select_image_button:
-                gotoActivity(ImageSelectorActivity.class);
-                break;
-        }
-    }*/
 }

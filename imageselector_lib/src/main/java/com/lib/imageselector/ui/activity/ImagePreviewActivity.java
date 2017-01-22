@@ -15,9 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -40,10 +42,19 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
     private static final String EXTRA_SELECTED_IMAGES = "selected_images";
     private static final String EXTRA_SELECTED_MAXMUM = "max_selected_num";
     private static final String EXTRA_POSITION = "position";
+    private static final String EXTRA_PREVIEW_TYPE = "preview_type";
+    //预览选中图片
+    public static final int PREVIEW_SELECTED_IMAGE = 1;
+    //预览文件夹中的图片
+    public static final int PREVIEW_FOLD_IMAGE = 2;
     private Context context;
     private int foldPosition;
+    //图片列表
     private List<MediaInfo> mediaList;
-    private List<MediaInfo> selectedList;
+    //选中图片列表
+    private List<MediaInfo> selectedImages;
+    //预览图片类型
+    private int previewType;
     private int maxSelectNum;
     private int selectedNum;
     private int currentPosition = 0;
@@ -52,13 +63,15 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
     private ImagePagerAdapter imageAdapter;
     private Toolbar toolbar;
     private CheckBox imageSelectCB;
+    private FrameLayout mSelectLayout;
 
-    public static void start(Activity activity, int foldPosition, List<MediaInfo> selected, int max, int position) {
+    public static void start(Activity activity, int foldPosition, List<MediaInfo> selected, int max, int position,int previewType) {
         Intent intent = new Intent(activity, ImagePreviewActivity.class);
         intent.putExtra(EXTRA_FOLD_POSITION, foldPosition);
         intent.putExtra(EXTRA_SELECTED_IMAGES, (ArrayList) selected);
         intent.putExtra(EXTRA_SELECTED_MAXMUM, max);
         intent.putExtra(EXTRA_POSITION, position);
+        intent.putExtra(EXTRA_PREVIEW_TYPE, previewType);
 
         activity.startActivityForResult(intent, 1);
     }
@@ -73,10 +86,18 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
 
     private void initData() {
         foldPosition = getIntent().getIntExtra(EXTRA_FOLD_POSITION, 0);
-        mediaList = MediaLoader.getInstance(this).getMediaListFromFoldList(foldPosition);
-        selectedList = (List<MediaInfo>) getIntent().getSerializableExtra(EXTRA_SELECTED_IMAGES);
+        previewType = getIntent().getIntExtra(EXTRA_PREVIEW_TYPE, 0);
+        selectedImages = (List<MediaInfo>) getIntent().getSerializableExtra(EXTRA_SELECTED_IMAGES);
         maxSelectNum = getIntent().getIntExtra(EXTRA_SELECTED_MAXMUM, 0);
         currentPosition = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        if(previewType == 1) {
+            mediaList = selectedImages;
+        } else {
+            mediaList = MediaLoader.getInstance(this).getMediaListFromFoldList(foldPosition);
+        }
+
+
+
     }
 
     private void initView() {
@@ -90,9 +111,11 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         toolbar.setTitle((currentPosition + 1) + "/" + mediaList.size());
 
         completeText = (TextView) findViewById(R.id.tv_complete);
-        completeText.setText("完成(" + selectedList.size() + "/" + maxSelectNum + ")");
+        completeText.setText("完成(" + selectedImages.size() + "/" + maxSelectNum + ")");
 
         imageSelectCB = (CheckBox) findViewById(R.id.cb_image_select);
+        mSelectLayout = (FrameLayout) findViewById(R.id.select_layout);
+
         if(mediaList.get(currentPosition).isChecked()) {
             imageSelectCB.setChecked(true);
         }
@@ -101,13 +124,33 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
             public void onClick(View v) {
                 MediaInfo m = mediaList.get(currentPosition);
                 if(!m.isChecked()) {
+                    if(selectedImages.size() == 9) {
+                        Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     m.setChecked(true);
-                    selectedList.add(m);
+                    selectedImages.add(m);
+                    imageSelectCB.setChecked(true);
                 } else {
                     m.setChecked(false);
-                    selectedList.remove(m);
+                    selectedImages.remove(m);
+                    imageSelectCB.setChecked(false);
                 }
                 imageAdapter.notifyDataSetChanged();
+            }
+        });
+
+        imageSelectCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(selectedImages.size() == 9) {
+                    if(isChecked) {
+                        if(!mediaList.get(currentPosition).isChecked()) {
+                            buttonView.setChecked(false);
+                        }
+
+                    }
+                }
             }
         });
 
@@ -124,7 +167,8 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         MediaInfo m = mediaList.get(position);
         currentPosition = position;
         toolbar.setTitle((currentPosition + 1) + "/" + mediaList.size());
-        if(selectedList.contains(m)) {
+
+        if(selectedImages.contains(m)) {
             imageSelectCB.setChecked(true);
         } else {
             imageSelectCB.setChecked(false);
@@ -143,7 +187,18 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
 
     @Override
     public void onPhotoTap(View view, float x, float y) {
-        finish();
+        if(toolbar.isShown()) {
+            toolbar.setVisibility(View.GONE);
+        } else {
+            toolbar.setVisibility(View.VISIBLE);
+        }
+        if(mSelectLayout.isShown()) {
+            mSelectLayout.setVisibility(View.GONE);
+        } else {
+            mSelectLayout.setVisibility(View.VISIBLE);
+        }
+
+        //finish();
     }
 
     @Override
@@ -166,6 +221,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
             final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 
             progressBar.setVisibility(View.VISIBLE);
+
             Glide.with(context)
                     .load(image.getPath())
                     .crossFade()
