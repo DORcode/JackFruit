@@ -4,7 +4,10 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +24,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -31,7 +32,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import com.lib.imageselector.R;
-import com.lib.imageselector.ScreenUtils;
 import com.lib.imageselector.beans.MediaFolder;
 import com.lib.imageselector.beans.MediaInfo;
 import com.lib.imageselector.ui.adapter.ImageListAdapter;
@@ -49,6 +49,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     private static final String EXTRA_SELECTED_IMAGES = "selected_images";
     private static final String EXTRA_SELECTED_MAXMUM = "max_selected_num";
     private static final String EXTRA_CAMERA_ISSHOW = "camera_isshow";
+    private static final int REQUEST_CODE_CAMERA = 0x101;
     //是否显示拍照按钮
     private boolean isShowCamera = true;
     //列表中是否显示视频
@@ -178,12 +179,18 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case RESULT_OK:
 
-                break;
-        }
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            MediaLoader.getInstance(context).findImagePathByUri(uri);
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if(cursor.moveToFirst()) {
+                String path = cursor.getString(cursor.getColumnIndex("_data"));
+                Log.d(TAG, "onActivityResult: " + data.getExtras().get("data") + "_" + path);
+            }
+
+        }
     }
 
     private void setCompleteText() {
@@ -272,7 +279,8 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     }
 
     private void takePhoto() {
-
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent,REQUEST_CODE_CAMERA );
     }
 
     private void startPreview(int position, int type) {

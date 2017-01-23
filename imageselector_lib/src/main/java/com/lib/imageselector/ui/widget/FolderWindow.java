@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.lib.imageselector.R;
-import com.lib.imageselector.ScreenUtils;
+import com.lib.imageselector.utils.ScreenUtils;
 import com.lib.imageselector.beans.MediaFolder;
 import com.lib.imageselector.ui.adapter.ImageFolderAdapter;
 

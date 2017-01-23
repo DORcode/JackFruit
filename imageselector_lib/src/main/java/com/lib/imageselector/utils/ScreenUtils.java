@@ -1,4 +1,4 @@
-package com.lib.imageselector;
+package com.lib.imageselector.utils;
 
 import android.app.Activity;
 import android.content.Context;

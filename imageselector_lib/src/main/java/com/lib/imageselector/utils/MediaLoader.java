@@ -4,6 +4,7 @@ import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.lib.imageselector.beans.MediaInfo;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -142,6 +144,17 @@ public class MediaLoader {
         Log.d(TAG, "getImageFolders: " + (System.currentTimeMillis() - time));
         cursor.close();
         return folders;
+    }
+
+    public MediaInfo findImagePathByUri(Uri uri) {
+        Cursor cursor = MediaStore.Images.Media.query(cr,uri, null, null, null, null);
+        MediaInfo info = null;
+        while (cursor.moveToFirst()) {
+            String path = cursor.getString(cursor.getColumnIndex("_data"));
+            File file = new File(path);
+            info= new MediaInfo(path, file.getName(), MediaInfo.MediaType.IMAGE, new Date(file.lastModified()).toString());
+        }
+        return info;
     }
 
     /**
