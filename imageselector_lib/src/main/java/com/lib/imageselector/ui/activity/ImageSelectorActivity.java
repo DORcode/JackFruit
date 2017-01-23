@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -29,9 +31,11 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import com.lib.imageselector.R;
+import com.lib.imageselector.ScreenUtils;
 import com.lib.imageselector.beans.MediaFolder;
 import com.lib.imageselector.beans.MediaInfo;
 import com.lib.imageselector.ui.adapter.ImageListAdapter;
+import com.lib.imageselector.ui.widget.FolderWindow;
 import com.lib.imageselector.ui.widget.GridSpacingItemDecoration;
 import com.lib.imageselector.utils.MediaLoader;
 
@@ -72,6 +76,8 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     private BottomSheetDialog bottomSheetDialog;
     //预览按钮
     private TextView previewText;
+    //文件夹选择弹窗
+    private FolderWindow folderWindow;
 
     public static void start(Activity activity, List<MediaInfo> selected, int max, boolean isShowCamera) {
         Intent intent = new Intent(activity, ImageSelectorActivity.class);
@@ -109,9 +115,10 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         folderSelectLayout = (LinearLayout) findViewById(R.id.fold_select_layout);
         previewText = (TextView) findViewById(R.id.preview_selected);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
-        folderListRV = (RecyclerView) LayoutInflater.from(this).inflate(R.layout.layout_folders_dialog, null);
-        bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(folderListRV);
+        //bottomSheetDialog = new BottomSheetDialog(this);
+        //bottomSheetDialog.setContentView(folderListRV);
+        folderWindow = new FolderWindow(this, folderList);
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -134,7 +141,17 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         folderSelectLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetDialog.show();
+                //数据未加载完成时不响应点击
+                if(folderList.size() == 0) {
+                    return;
+                }
+
+                if(folderWindow.isShowing()) {
+                    folderWindow.dismiss();
+                } else {
+                    Log.d(TAG, "onClick: " + folderSelectLayout.getHeight());
+                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.BOTTOM, 0, 0);
+                }
             }
         });
 
@@ -145,6 +162,16 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                     return;
                 }
                 startPreview(0, ImagePreviewActivity.PREVIEW_SELECTED_IMAGE);
+            }
+        });
+
+        //弹窗选中文件夹回调
+        folderWindow.setOnFolderSelectedListener(new FolderWindow.OnFolderSelectedListener() {
+            @Override
+            public void onFolderSelect(int position) {
+                currentFold = position;
+                showMediaList = folderList.get(position).getList();
+                imageListAdapter.setList(showMediaList);
             }
         });
     }
@@ -207,6 +234,9 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                 folderList = mediaFolders;
                 showMediaList = folderList.get(currentFold).getList();
                 imageListAdapter.setList(showMediaList);
+
+                //设置弹窗列表数据
+                folderWindow.setFolderList(folderList);
                 showProgressbar(false);
             }
         };

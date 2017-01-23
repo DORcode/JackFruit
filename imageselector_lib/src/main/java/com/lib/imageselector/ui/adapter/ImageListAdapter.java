@@ -1,6 +1,8 @@
 package com.lib.imageselector.ui.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -79,12 +81,12 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             final int pos = isShowCamera ? position -1 : position;
             final MediaInfo mediaInfo = list.get(pos);
 
+            selectImage(imageHolder, mediaInfo.isChecked());
 
             Glide.with(context)
                     .load(new File(mediaInfo.getPath()))
-                    .thumbnail(0.5f)
-                    .centerCrop()
                     .placeholder(R.mipmap.ic_placeholder)
+                    .centerCrop()
                     .into(imageHolder.image);
 
             imageHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -109,9 +111,9 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     } else {
                         selectedImages.remove(mediaInfo);
                     }
-
-
+                    selectImage(imageHolder, isChecked);
                     onImageSelectorItemListener.onImageSelect(selectedImages);
+
                 }
             });
 
@@ -124,6 +126,14 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
             imageHolder.checkbox.setChecked(mediaInfo.isChecked());
+        }
+    }
+
+    private void selectImage(ImageHolder imageHolder, boolean isChecked) {
+        if(isChecked) {
+            imageHolder.image.setColorFilter(ContextCompat.getColor(context, R.color.image_overlay2), PorterDuff.Mode.SRC_ATOP);
+        } else {
+            imageHolder.image.setColorFilter(ContextCompat.getColor(context, R.color.image_overlay), PorterDuff.Mode.SRC_ATOP);
         }
     }
 
@@ -163,7 +173,6 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private void init(View itemView) {
             image = (ImageView) itemView.findViewById(R.id.image);
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
-            //checkbox = (ImageView) itemView.findViewById(R.id.checkbox);
         }
     }
 

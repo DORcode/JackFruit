@@ -125,7 +125,6 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
                     if(isChecked) {
                         if(!mediaList.get(currentPosition).isChecked()) {
                             imageSelectCB.setChecked(false);
-                            //buttonView.setChecked(false);
                         }
                     }
                 }
@@ -162,7 +161,6 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         MediaInfo m = mediaList.get(position);
         currentPosition = position;
         toolbar.setTitle((currentPosition + 1) + "/" + mediaList.size());
-
         if(selectedImages.contains(m)) {
             imageSelectCB.setChecked(true);
         } else {

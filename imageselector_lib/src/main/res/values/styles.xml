@@ -6,4 +6,9 @@
     <style name="ImageSelectMenuStyle" parent="@style/Base.Widget.AppCompat.Light.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>
     </style>
+    
+    <style name="popup">
+        <item name="android:windowEnterAnimation">@anim/anim_pop_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_exit</item>
+    </style>
 </resources>
