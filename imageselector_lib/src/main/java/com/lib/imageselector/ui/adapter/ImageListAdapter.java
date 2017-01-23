@@ -87,53 +87,29 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .placeholder(R.mipmap.ic_placeholder)
                     .into(imageHolder.image);
 
-            /*imageHolder.checkbox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(selectedImages.size() == 9 && !mediaInfo.isChecked()) {
-                        Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    //选中图片
-                    if(!mediaInfo.isChecked()) {
-
-                        mediaInfo.setChecked(true);
-                        selectedImages.add(mediaInfo);
-                        imageHolder.checkbox.setChecked(true);
-                    } else {//取消选中
-                        mediaInfo.setChecked(false);
-                        selectedImages.remove(mediaInfo);
-                        imageHolder.checkbox.setChecked(false);
-                    }
-                    onImageSelectorItemListener.onImageSelect(selectedImages);
-                }
-            });*/
-
             imageHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(selectedImages.size() == 9) {
-                        if(isChecked == true) {
+                        if(isChecked) {
                             if(!mediaInfo.isChecked()) {
                                 imageHolder.checkbox.setChecked(false);
-                                //buttonView.setChecked(false);
+                                Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
+                                return;
                             }
                         }
                     }
 
-                    if(selectedImages.size() == 9 && !mediaInfo.isChecked() && isChecked) {
-                        Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    mediaInfo.setChecked(isChecked);
 
                     if(isChecked) {
-                        if(!mediaInfo.isChecked()) selectedImages.add(mediaInfo);
-
+                        if(!selectedImages.contains(mediaInfo)) {
+                            selectedImages.add(mediaInfo);
+                        }
                     } else {
-                        if(mediaInfo.isChecked()) selectedImages.remove(mediaInfo);
+                        selectedImages.remove(mediaInfo);
                     }
-                    mediaInfo.setChecked(isChecked);
+
 
                     onImageSelectorItemListener.onImageSelect(selectedImages);
                 }

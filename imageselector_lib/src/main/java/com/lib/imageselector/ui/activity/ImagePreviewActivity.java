@@ -95,9 +95,6 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         } else {
             mediaList = MediaLoader.getInstance(this).getMediaListFromFoldList(foldPosition);
         }
-
-
-
     }
 
     private void initView() {
@@ -119,45 +116,37 @@ public class ImagePreviewActivity extends AppCompatActivity implements ViewPager
         if(mediaList.get(currentPosition).isChecked()) {
             imageSelectCB.setChecked(true);
         }
-        imageSelectCB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MediaInfo m = mediaList.get(currentPosition);
-                if(!m.isChecked()) {
-                    if(selectedImages.size() == 9) {
-                        Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    m.setChecked(true);
-                    selectedImages.add(m);
-                    imageSelectCB.setChecked(true);
-                } else {
-                    m.setChecked(false);
-                    selectedImages.remove(m);
-                    imageSelectCB.setChecked(false);
-                }
-                setCompleteText();
-                //imageAdapter.notifyDataSetChanged();
-            }
-        });
 
         imageSelectCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MediaInfo m = mediaList.get(currentPosition);
                 if(selectedImages.size() == 9) {
                     if(isChecked) {
                         if(!mediaList.get(currentPosition).isChecked()) {
                             imageSelectCB.setChecked(false);
                             //buttonView.setChecked(false);
                         }
-
                     }
                 }
+                m.setChecked(isChecked);
+                if(isChecked) {
+                    if(!selectedImages.contains(m)) {
+                        selectedImages.add(m);
+                    }
+                } else {
+                    selectedImages.remove(m);
+                }
+                imageSelectCB.setChecked(isChecked);
+                setCompleteText();
             }
         });
 
     }
 
+    /**
+     * 设置完成按钮
+     */
     private void setCompleteText() {
         completeText.setText("完成(" + selectedImages.size() + "/" + maxSelectNum + ")");
     }
