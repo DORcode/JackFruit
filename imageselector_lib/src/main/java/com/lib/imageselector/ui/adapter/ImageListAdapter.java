@@ -55,6 +55,11 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
+    public void setSelectedImages(List<MediaInfo> selectedImages) {
+        this.selectedImages = selectedImages;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == ITEM_TYPE_CAMERA) {
@@ -81,7 +86,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             final int pos = isShowCamera ? position -1 : position;
             final MediaInfo mediaInfo = list.get(pos);
 
-            selectImage(imageHolder, mediaInfo.isChecked());
+            selectImage(imageHolder, selectedImages.contains(mediaInfo));
 
             Glide.with(context)
                     .load(new File(mediaInfo.getPath()))
@@ -94,7 +99,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(selectedImages.size() == 9) {
                         if(isChecked) {
-                            if(!mediaInfo.isChecked()) {
+                            if(!selectedImages.contains(mediaInfo)) {
                                 imageHolder.checkbox.setChecked(false);
                                 Toast.makeText(context, "最多可以选择9张", Toast.LENGTH_SHORT).show();
                                 return;
@@ -102,7 +107,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         }
                     }
 
-                    mediaInfo.setChecked(isChecked);
+                    //mediaInfo.setChecked(isChecked);
 
                     if(isChecked) {
                         if(!selectedImages.contains(mediaInfo)) {
@@ -125,7 +130,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     onImageSelectorItemListener.onImageClick(pos);
                 }
             });
-            imageHolder.checkbox.setChecked(mediaInfo.isChecked());
+            imageHolder.checkbox.setChecked(selectedImages.contains(mediaInfo));
         }
     }
 

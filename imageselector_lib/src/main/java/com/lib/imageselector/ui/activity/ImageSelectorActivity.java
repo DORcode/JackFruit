@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -150,8 +151,11 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                 if(folderWindow.isShowing()) {
                     folderWindow.dismiss();
                 } else {
-                    Log.d(TAG, "onClick: " + folderSelectLayout.getHeight());
-                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.BOTTOM, 0, 0);
+
+                    int[] location = new int[2];
+                    mFoldSelectFL.getLocationOnScreen(location);
+                    Log.d(TAG, "onClick: " + mFoldSelectFL.getHeight() + "_" + location[1]);
+                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.NO_GRAVITY, location[0], location[1] - folderWindow.getHeight());
                 }
             }
         });
@@ -172,6 +176,11 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
             public void onFolderSelect(int position) {
                 currentFold = position;
                 showMediaList = folderList.get(position).getList();
+                //当不是选择所有图片时
+                if(position != 0) {
+                    //不显示拍照按钮
+                    imageListAdapter.setShowCamera(false);
+                }
                 imageListAdapter.setList(showMediaList);
             }
         });
@@ -183,13 +192,37 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             Uri uri = data.getData();
-            MediaLoader.getInstance(context).findImagePathByUri(uri);
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            if(cursor.moveToFirst()) {
-                String path = cursor.getString(cursor.getColumnIndex("_data"));
-                Log.d(TAG, "onActivityResult: " + data.getExtras().get("data") + "_" + path);
+            MediaInfo newMedia = MediaLoader.getInstance(context).findImagePathByUri(uri);
+            newMedia.setChecked(true);
+            selectedImages.add(0, newMedia);
+            imageListAdapter.setSelectedImages(selectedImages);
+        } else if(requestCode == ImagePreviewActivity.PREVIEW_SELECTED_IMAGE
+                || requestCode == ImagePreviewActivity.PREVIEW_FOLD_IMAGE){
+            if(data == null) {
+                return;
+            }
+            selectedImages = (List<MediaInfo>) data.getSerializableExtra(ImagePreviewActivity.EXTRA_SELECTED_IMAGES);
+            if(resultCode == RESULT_OK) {
+                selectFinish(true);
+                finish();
+            } else {
+                imageListAdapter.setSelectedImages(selectedImages);
             }
 
+        }
+        setCompleteText();
+    }
+
+
+
+    private void selectFinish(boolean bool) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_SELECTED_IMAGES, (ArrayList) selectedImages);
+
+        if(bool) {
+            setResult(RESULT_OK, intent);
+        } else {
+            setResult(RESULT_CANCELED, intent);
         }
     }
 
