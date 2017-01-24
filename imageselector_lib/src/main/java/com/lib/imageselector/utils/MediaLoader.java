@@ -129,8 +129,7 @@ public class MediaLoader {
 
             //该图片所在文件夹未出现
             if(subFolder == null) {
-                Log.d(TAG, "getImageFolders: " + parentPath + "_" + parentName);
-                Log.d(TAG, "getImageFolders: " + (System.currentTimeMillis() - time));
+                Log.d(TAG, "getImageFolders: " + (System.currentTimeMillis() - time + parentPath + "_" + parentName));
                 subFolder = new MediaFolder(parentPath, parentName);
                 folders.add(subFolder);
                 subFolder.getList().add(image);
@@ -146,14 +145,27 @@ public class MediaLoader {
         return folders;
     }
 
+    public List<MediaFolder> getVideoFolder() {
+
+
+        return null;
+    }
+
     public MediaInfo findImagePathByUri(Uri uri) {
         Cursor cursor = MediaStore.Images.Media.query(cr,uri, null, null, null, null);
         MediaInfo info = null;
-        while (cursor.moveToFirst()) {
-            String path = cursor.getString(cursor.getColumnIndex("_data"));
-            File file = new File(path);
-            info= new MediaInfo(path, file.getName(), MediaInfo.MediaType.IMAGE, new Date(file.lastModified()).toString());
+        String path;
+        if(cursor != null) {
+            cursor.moveToFirst();
+            path = cursor.getString(cursor.getColumnIndex("_data"));
+            cursor.close();
+        } else {
+            path = uri.getPath();
         }
+
+        File file = new File(path);
+        info= new MediaInfo(path, file.getName(), MediaInfo.MediaType.IMAGE, new Date(file.lastModified()).toString());
+
         return info;
     }
 
