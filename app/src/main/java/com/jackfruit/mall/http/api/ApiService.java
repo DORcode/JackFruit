@@ -53,4 +53,6 @@ public interface ApiService {
     @Multipart
     @POST
     Observable<ResponseBody> httpPostMulti(@Url String url, @QueryMap Map map);
+
+
 }

@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.jackfruit.mall.R;
 import com.jackfruit.mall.databinding.ActivityShowImagesBinding;
+import com.jackfruit.mall.http.RetrofitManager;
+import com.jackfruit.mall.http.api.ApiService;
 import com.lib.imageselector.ui.activity.ImageSelectorActivity;
 
 public class ShowImagesActivity extends Activity {
@@ -21,7 +23,12 @@ public class ShowImagesActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ShowImagesActivity.this, ImageSelectorActivity.class));
+
+
             }
         });
+
+        RetrofitManager.getInstance().getRetrofit("http://192.168.65.72:3000/").create(ApiService.class).httpPostMulti("upload", null);
     }
+
 }
