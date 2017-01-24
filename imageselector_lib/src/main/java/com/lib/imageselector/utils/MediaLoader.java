@@ -58,6 +58,8 @@ public class MediaLoader {
     private String[] VIDEOS_PROJECTION = new String[] {
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DATA,
+            MediaStore.Video.Media.DATE_MODIFIED,
+            MediaStore.Video.Media.DISPLAY_NAME,
             MediaStore.Video.Media.SIZE,
             MediaStore.Video.Media.DISPLAY_NAME,
             MediaStore.Video.Media.ALBUM,
@@ -98,7 +100,7 @@ public class MediaLoader {
         long time = System.currentTimeMillis();
         folders = new ArrayList<MediaFolder>();
         Cursor cursor = MediaStore.Images.Media.query(cr,MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGES_PROJECTION, null, MediaStore.Images.Media.DATE_ADDED + " desc");
-        MediaFolder allImageFolder = new MediaFolder("all images", "所有图片");
+        MediaFolder allImageFolder = new MediaFolder("all images", "图片和视频");
         List<MediaInfo> allImageInfo = new ArrayList<MediaInfo>();
         while(cursor.moveToNext()) {
 
@@ -111,7 +113,6 @@ public class MediaLoader {
             String dateModified = cursor.getString(cursor.getColumnIndex(IMAGES_PROJECTION[2]));
             //名称
             String name = cursor.getString(cursor.getColumnIndex(IMAGES_PROJECTION[3]));
-            //Log.d(TAG, "getMediaFolders: " + path);
             //图片file对象
             File imageFile = new File(path);
 
@@ -145,10 +146,35 @@ public class MediaLoader {
         return folders;
     }
 
-    public List<MediaFolder> getVideoFolder() {
+    public MediaFolder getVideoFolder() {
+        MediaFolder videoFolder = new MediaFolder("all video", "所有视频");
+        List<MediaInfo> videoList = new ArrayList<MediaInfo>();
+        videoFolder.setList(videoList);
+        //查询出手机中所有的视频显示在一个文件夹中
+        Cursor cursor = MediaStore.Video.query(cr, MediaStore.Video.Media.EXTERNAL_CONTENT_URI, VIDEOS_PROJECTION);
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndex(VIDEOS_PROJECTION[0]));
+            //路径
+            String path = cursor.getString(cursor.getColumnIndex(VIDEOS_PROJECTION[1]));
+            //修改日期
+            String dateModified = cursor.getString(cursor.getColumnIndex(VIDEOS_PROJECTION[2]));
+            //名称
+            String name = cursor.getString(cursor.getColumnIndex(VIDEOS_PROJECTION[3]));
+            MediaInfo videoInfo = new MediaInfo(path, name, MediaInfo.MediaType.VIDEO, dateModified);
+            videoList.add(videoInfo);
+        }
+        return videoFolder;
+    }
 
-
-        return null;
+    public List<MediaFolder> getImagesAndVideo() {
+        getImageFolders();
+        if(folders.size()== 0) {
+            folders.add(getVideoFolder());
+        } else {
+            folders.get(0).getList().addAll(0, getVideoFolder().getList());
+            folders.add(1, getVideoFolder());
+        }
+        return folders;
     }
 
     public MediaInfo findImagePathByUri(Uri uri) {

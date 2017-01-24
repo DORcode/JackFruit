@@ -50,7 +50,11 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     private static final String EXTRA_SELECTED_IMAGES = "selected_images";
     private static final String EXTRA_SELECTED_MAXMUM = "max_selected_num";
     private static final String EXTRA_CAMERA_ISSHOW = "camera_isshow";
+    private static final String EXTRA_SHOW_TYPE = "show_media_type";
     private static final int REQUEST_CODE_CAMERA = 0x101;
+    //列表显示类型，0代表图片，1代表视频和图片
+    private int mediaShowType = 0;
+
     //是否显示拍照按钮
     private boolean isShowCamera = true;
     //列表中是否显示视频
@@ -64,6 +68,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     private TextView mCompleteSelectedTV;
     private FrameLayout mFoldSelectFL;
     private ProgressBar progressBar;
+    private TextView selectedFoldeName;
     private List<MediaFolder> folderList = new ArrayList<MediaFolder>();
     private List<MediaInfo> showMediaList = new ArrayList<MediaInfo>();
     private List<MediaInfo> selectedImages = new ArrayList<MediaInfo>();
@@ -81,11 +86,13 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
     //文件夹选择弹窗
     private FolderWindow folderWindow;
 
-    public static void start(Activity activity, List<MediaInfo> selected, int max, boolean isShowCamera) {
+    public static void start(Activity activity, List<MediaInfo> selected, int max, boolean isShowCamera, int showMediaType) {
         Intent intent = new Intent(activity, ImageSelectorActivity.class);
         intent.putExtra(EXTRA_SELECTED_IMAGES, (ArrayList) selected);
         intent.putExtra(EXTRA_SELECTED_MAXMUM, max);
         intent.putExtra(EXTRA_CAMERA_ISSHOW, isShowCamera);
+        intent.putExtra(EXTRA_SHOW_TYPE, showMediaType);
+
         activity.startActivityForResult(intent, 1);
     }
     @Override
@@ -93,9 +100,17 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_selector);
         context = this;
+        initData();
         initView();
         initListener();
         getAllImageFolderList();
+    }
+
+    private void initData() {
+        //selectedImages = (List<MediaInfo>) getIntent().getSerializableExtra(EXTRA_SELECTED_IMAGES);
+        selectedMaxNum = getIntent().getIntExtra(EXTRA_SELECTED_MAXMUM, 9);
+        isShowCamera = getIntent().getBooleanExtra(EXTRA_CAMERA_ISSHOW, true);
+        mediaShowType = getIntent().getIntExtra(EXTRA_SHOW_TYPE, 1);
     }
 
     private void initView() {
@@ -114,6 +129,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         imageRecyclerView.hasFixedSize();
         imageRecyclerView.setAdapter(imageListAdapter);
         mFoldSelectFL = (FrameLayout) findViewById(R.id.image_bottom_line);
+        selectedFoldeName = (TextView) findViewById(R.id.fold_selected_name);
         folderSelectLayout = (LinearLayout) findViewById(R.id.fold_select_layout);
         previewText = (TextView) findViewById(R.id.preview_selected);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
@@ -180,7 +196,10 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                 if(position != 0) {
                     //不显示拍照按钮
                     imageListAdapter.setShowCamera(false);
+                } else {
+                    imageListAdapter.setShowCamera(true);
                 }
+                selectedFoldeName.setText(folderList.get(position).getName());
                 imageListAdapter.setList(showMediaList);
             }
         });
@@ -192,10 +211,24 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             Uri uri = data.getData();
+            /*Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if(cursor != null) {
+                cursor.moveToFirst();
+                String path = cursor.getString(cursor.getColumnIndex("_data"));
+                File file = new File(path);
+                MediaInfo info= new MediaInfo(path, file.getName(), MediaInfo.MediaType.IMAGE, new Date(file.lastModified()).toString());
+                Log.d(TAG, "onActivityResult: " + data.getData().getPath());
+                cursor.close();
+                selectedImages.add(0, info);
+                imageListAdapter.setSelectedImages(selectedImages);
+            } else {
+
+            }*/
             MediaInfo newMedia = MediaLoader.getInstance(context).findImagePathByUri(uri);
-            newMedia.setChecked(true);
             selectedImages.add(0, newMedia);
             imageListAdapter.setSelectedImages(selectedImages);
+            Log.d(TAG, "onActivityResult: " + newMedia.toString());
+
         } else if(requestCode == ImagePreviewActivity.PREVIEW_SELECTED_IMAGE
                 || requestCode == ImagePreviewActivity.PREVIEW_FOLD_IMAGE){
             if(data == null) {
@@ -254,7 +287,13 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         Observable<List<MediaFolder>> observable = Observable.create(new Observable.OnSubscribe<List<MediaFolder>>() {
             @Override
             public void call(Subscriber<? super List<MediaFolder>> subscriber) {
-                List<MediaFolder> folders = MediaLoader.getInstance(context).getImageFolders();
+                List<MediaFolder> folders;
+                if(mediaShowType == 0) {
+                    folders = MediaLoader.getInstance(context).getImageFolders();
+                } else {
+                    folders = MediaLoader.getInstance(context).getImagesAndVideo();
+                }
+
                 subscriber.onNext(folders);
             }
         });
@@ -311,11 +350,19 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         setCompleteText();
     }
 
+    /**
+     * 拍照
+     */
     private void takePhoto() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(cameraIntent,REQUEST_CODE_CAMERA );
+        startActivityForResult(cameraIntent,REQUEST_CODE_CAMERA);
     }
 
+    /**
+     * 进入预览界面
+     * @param position 默认显示
+     * @param type 点击文件夹或者点击预览按钮
+     */
     private void startPreview(int position, int type) {
         ImagePreviewActivity.start(this, currentFold, selectedImages, selectedMaxNum, position, type);
     }
