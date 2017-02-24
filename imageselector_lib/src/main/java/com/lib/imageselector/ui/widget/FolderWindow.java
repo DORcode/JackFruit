@@ -55,7 +55,7 @@ public class FolderWindow extends PopupWindow {
         setOutsideTouchable(true);
 
         //设置高度
-        setHeight(ScreenUtils.getScreenHeight(context) - ScreenUtils.dip2px(context, 200));
+        setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         //设置宽度
         setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         setAnimationStyle(R.style.popup);

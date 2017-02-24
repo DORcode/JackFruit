@@ -171,7 +171,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                     int[] location = new int[2];
                     mFoldSelectFL.getLocationOnScreen(location);
                     Log.d(TAG, "onClick: " + mFoldSelectFL.getHeight() + "_" + location[1]);
-                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.NO_GRAVITY, location[0], location[1] - folderWindow.getHeight());
+                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.BOTTOM, 0, 0);
                 }
             }
         });

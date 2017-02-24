@@ -18,6 +18,8 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.jackfruit.mall.JFApplication;
 import com.jackfruit.mall.R;
+import com.jackfruit.mall.mvp.HomePresenter;
+import com.jackfruit.mall.mvp.model.HomeModel;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -31,7 +33,7 @@ import butterknife.OnClick;
 import common.lib.MessageEvent;
 import common.lib.base.BaseAppCompatActivity;
 
-public class LocationActivity extends BaseMVPActivity {
+public class LocationActivity extends BaseMVPActivity<HomePresenter, HomeModel> {
 
     @BindView(R.id.mv_map)
     MapView mMapView;

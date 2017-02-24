@@ -28,7 +28,7 @@ public class ShowImagesActivity extends Activity {
             }
         });
 
-        RetrofitManager.getInstance().getRetrofit("http://192.168.65.72:3000/").create(ApiService.class).httpPostMulti("upload", null);
+        //RetrofitManager.getInstance().getRetrofit("http://192.168.65.72:3000/").create(ApiService.class).httpPostMulti("upload", null);
     }
 
 }

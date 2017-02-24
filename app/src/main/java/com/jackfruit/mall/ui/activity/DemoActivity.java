@@ -88,7 +88,6 @@ public class DemoActivity extends BaseAppCompatActivity implements BottomNavigat
         if(savedInstanceState != null) {
             currentTab = savedInstanceState.getInt("currentTab", 0);
         }
-
     }
 
     //初始化底部tab

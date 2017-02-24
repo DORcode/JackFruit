@@ -46,11 +46,16 @@ public class ImageFolderAdapter extends RecyclerView.Adapter<ImageFolderAdapter.
     @Override
     public void onBindViewHolder(final FolderHolder holder, final int position) {
         MediaFolder mediaFolder = getItem(position);
-        Glide.with(context)
-                .load(mediaFolder.getList().get(0).getPath())
-                .centerCrop()
-                .placeholder(R.mipmap.ic_placeholder)
-                .into(holder.folderFirstImage);
+        try {
+            Glide.with(context)
+                    .load(mediaFolder.getList().get(0).getPath())
+                    .centerCrop()
+                    .placeholder(R.mipmap.ic_placeholder)
+                    .into(holder.folderFirstImage);
+        } catch (Exception e) {
+
+        }
+
         holder.setData(mediaFolder);
 
         holder.checkBox.setVisibility(position == lastPosition ? View.VISIBLE : View.GONE);
