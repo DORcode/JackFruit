@@ -68,7 +68,7 @@ public class FolderWindow extends PopupWindow {
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(view);
-        update();
+        //update();
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
