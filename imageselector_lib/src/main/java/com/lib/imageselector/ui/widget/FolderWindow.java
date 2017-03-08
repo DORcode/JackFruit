@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -31,9 +33,11 @@ public class FolderWindow extends PopupWindow {
     private Context context;
     private View view;
     private RecyclerView recyclerView;
+    private View marginView;
     private ImageFolderAdapter folderAdapter;
     private List<MediaFolder> folderList;
     private OnFolderSelectedListener onFolderSelectedListener;
+    private int marginPx;
 
     public FolderWindow(Context context, List<MediaFolder> folderList) {
         super(context);
@@ -45,6 +49,7 @@ public class FolderWindow extends PopupWindow {
     private void initView() {
         view = LayoutInflater.from(context).inflate(R.layout.layout_folders_dialog, null);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_folder_list);
+        marginView = view.findViewById(R.id.margin);
         folderAdapter = new ImageFolderAdapter(context, folderList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -55,7 +60,7 @@ public class FolderWindow extends PopupWindow {
         setOutsideTouchable(true);
 
         //设置高度
-        setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
         //设置宽度
         setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         setAnimationStyle(R.style.popup);
@@ -64,6 +69,20 @@ public class FolderWindow extends PopupWindow {
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(view);
         update();
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                int maxHeight = view.getHeight() * 5 / 8;
+                int realHeight = recyclerView.getHeight();
+                ViewGroup.LayoutParams listParams = recyclerView.getLayoutParams();
+                listParams.height = realHeight > maxHeight ? maxHeight : realHeight;
+                recyclerView.setLayoutParams(listParams);
+                LinearLayout.LayoutParams marginParams = (LinearLayout.LayoutParams) marginView.getLayoutParams();
+                marginParams.height = marginPx;
+            }
+        });
 
         folderAdapter.setOnItemClickListener(new ImageFolderAdapter.OnItemClickListener() {
             @Override
@@ -95,5 +114,9 @@ public class FolderWindow extends PopupWindow {
 
     public interface OnFolderSelectedListener {
         void onFolderSelect(int position);
+    }
+
+    public void setMarginPx(int marginPx) {
+        this.marginPx = marginPx;
     }
 }

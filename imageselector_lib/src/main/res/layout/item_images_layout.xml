@@ -26,4 +26,9 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:layout_alignTop="@+id/image"/>
+    <TextView
+        android:id="@+id/tv_image_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"/>
 </com.lib.imageselector.ui.widget.SquareRelativeLayout>

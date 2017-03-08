@@ -136,7 +136,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         //bottomSheetDialog = new BottomSheetDialog(this);
         //bottomSheetDialog.setContentView(folderListRV);
         folderWindow = new FolderWindow(this, folderList);
-
+        folderWindow.setMarginPx(folderSelectLayout.getHeight());
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -169,9 +169,10 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                 } else {
 
                     int[] location = new int[2];
-                    mFoldSelectFL.getLocationOnScreen(location);
+                    /*mFoldSelectFL.getLocationOnScreen(location);
                     Log.d(TAG, "onClick: " + mFoldSelectFL.getHeight() + "_" + location[1]);
-                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.BOTTOM, 0, 0);
+                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.BOTTOM, 0, 0);*/
+                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.NO_GRAVITY, 0 , 0);
                 }
             }
         });
@@ -211,19 +212,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             Uri uri = data.getData();
-            /*Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            if(cursor != null) {
-                cursor.moveToFirst();
-                String path = cursor.getString(cursor.getColumnIndex("_data"));
-                File file = new File(path);
-                MediaInfo info= new MediaInfo(path, file.getName(), MediaInfo.MediaType.IMAGE, new Date(file.lastModified()).toString());
-                Log.d(TAG, "onActivityResult: " + data.getData().getPath());
-                cursor.close();
-                selectedImages.add(0, info);
-                imageListAdapter.setSelectedImages(selectedImages);
-            } else {
 
-            }*/
             MediaInfo newMedia = MediaLoader.getInstance(context).findImagePathByUri(uri);
             selectedImages.add(0, newMedia);
             imageListAdapter.setSelectedImages(selectedImages);
@@ -283,7 +272,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
      * 获取本地外部存在所有的图片所在文件夹及文件夹中的图片路径
      */
     private void getAllImageFolderList() {
-        progressBar.setVisibility(View.VISIBLE);
+        //progressBar.setVisibility(View.VISIBLE);
         Observable<List<MediaFolder>> observable = Observable.create(new Observable.OnSubscribe<List<MediaFolder>>() {
             @Override
             public void call(Subscriber<? super List<MediaFolder>> subscriber) {
@@ -316,7 +305,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
 
                 //设置弹窗列表数据
                 folderWindow.setFolderList(folderList);
-                showProgressbar(false);
+                //showProgressbar(false);
             }
         };
         Subscription subscription = observable

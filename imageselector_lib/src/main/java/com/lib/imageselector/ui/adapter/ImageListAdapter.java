@@ -11,11 +11,14 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.lib.imageselector.R;
 import com.lib.imageselector.beans.MediaInfo;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -93,7 +96,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .placeholder(R.mipmap.ic_placeholder)
                     .centerCrop()
                     .into(imageHolder.image);
-
+            //imageHolder.imagePath.setText(mediaInfo.getPath());
             imageHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -168,6 +171,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     class ImageHolder extends RecyclerView.ViewHolder {
         ImageView image;
         CheckBox checkbox;
+        TextView imagePath;
 
         public ImageHolder(View itemView) {
             super(itemView);
@@ -178,6 +182,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private void init(View itemView) {
             image = (ImageView) itemView.findViewById(R.id.image);
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
+            imagePath = (TextView) itemView.findViewById(R.id.tv_image_path);
         }
     }
 

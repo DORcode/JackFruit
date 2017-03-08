@@ -124,18 +124,20 @@ public class MediaLoader {
             MediaInfo image = new MediaInfo(path, name, MediaInfo.MediaType.IMAGE, dateModified);
             //加入到所有图片列表中
             allImageInfo.add(image);
-
+            MediaFolder newFolder = new MediaFolder(parentPath, parentName);
             //从文件夹列表中查找该图片文件夹是否已出现
-            subFolder = getMediaFolder(parentPath);
+            //subFolder = getMediaFolder(parentPath);
+            //subFolder = folders.get(folders.indexOf(newFolder));
 
             //该图片所在文件夹未出现
-            if(subFolder == null) {
+            if(!folders.contains(newFolder)) {
                 Log.d(TAG, "getImageFolders: " + (System.currentTimeMillis() - time + parentPath + "_" + parentName));
-                subFolder = new MediaFolder(parentPath, parentName);
-                folders.add(subFolder);
-                subFolder.getList().add(image);
+                //subFolder = new MediaFolder(parentPath, parentName);
+                folders.add(newFolder);
+                newFolder.getList().add(image);
             } else {
-                subFolder.addMedia(image);
+                folders.get(folders.indexOf(newFolder)).getList().add(image);
+                //subFolder.addMedia(image);
             }
 
         }
