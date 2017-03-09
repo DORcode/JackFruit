@@ -1,5 +1,8 @@
 package com.lib.imageselector.ui.widget;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationSet;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
@@ -20,6 +25,8 @@ import com.lib.imageselector.ui.adapter.ImageFolderAdapter;
 
 import java.util.List;
 
+import butterknife.OnClick;
+
 /**
  * @项目名称 JackFruit
  * @类：com.lib.imageselector.ui.widget
@@ -29,7 +36,7 @@ import java.util.List;
  * @修改
  * @修改时期 2017/1/23 11:01
  */
-public class FolderWindow extends PopupWindow {
+public class FolderWindow extends PopupWindow implements View.OnClickListener{
     private Context context;
     private View view;
     private RecyclerView recyclerView;
@@ -48,6 +55,7 @@ public class FolderWindow extends PopupWindow {
 
     private void initView() {
         view = LayoutInflater.from(context).inflate(R.layout.layout_folders_dialog, null);
+        view.setOnClickListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_folder_list);
         marginView = view.findViewById(R.id.margin);
         folderAdapter = new ImageFolderAdapter(context, folderList);
@@ -63,12 +71,12 @@ public class FolderWindow extends PopupWindow {
         setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
         //设置宽度
         setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        setAnimationStyle(R.style.popup);
+        //setAnimationStyle(R.style.popup);
         setFocusable(true);
         setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setContentView(view);
-        //update();
+        update();
 
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -81,6 +89,8 @@ public class FolderWindow extends PopupWindow {
                 recyclerView.setLayoutParams(listParams);
                 LinearLayout.LayoutParams marginParams = (LinearLayout.LayoutParams) marginView.getLayoutParams();
                 marginParams.height = marginPx;
+                marginView.setLayoutParams(marginParams);
+                enterAnimator();
             }
         });
 
@@ -93,6 +103,53 @@ public class FolderWindow extends PopupWindow {
         });
     }
 
+    @Override
+    public void dismiss() {
+        exitAnimator();
+    }
+
+    private void enterAnimator() {
+        ObjectAnimator listTranslate = ObjectAnimator.ofInt(recyclerView, "translationY", recyclerView.getHeight(), 0);
+        ObjectAnimator listAlpha = ObjectAnimator.ofFloat(recyclerView, "alpha", 0, 1);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(300);
+        //animatorSet.play(listAlpha).with(listTranslate);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.playTogether(listAlpha, listTranslate);
+        animatorSet.start();
+    }
+
+    private void exitAnimator() {
+        ObjectAnimator listTranslate = ObjectAnimator.ofInt(recyclerView, "translationY", 0, recyclerView.getHeight());
+        ObjectAnimator listAlpha = ObjectAnimator.ofFloat(recyclerView, "alpha", 1, 0);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(300);
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                FolderWindow.super.dismiss();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animatorSet.play(listAlpha).with(listTranslate);
+        animatorSet.start();
+    }
+
     public void setFolderList(List<MediaFolder> folderList) {
         this.folderList = folderList;
         folderAdapter.setFolderList(folderList);
@@ -101,6 +158,7 @@ public class FolderWindow extends PopupWindow {
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         super.showAtLocation(parent, gravity, x, y);
+        enterAnimator();
     }
 
     @Override
@@ -110,6 +168,11 @@ public class FolderWindow extends PopupWindow {
 
     public void setOnFolderSelectedListener(OnFolderSelectedListener onFolderSelectedListener) {
         this.onFolderSelectedListener = onFolderSelectedListener;
+    }
+
+    @Override
+    public void onClick(View v) {
+        dismiss();
     }
 
     public interface OnFolderSelectedListener {

@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -38,6 +39,7 @@ import com.lib.imageselector.beans.MediaInfo;
 import com.lib.imageselector.ui.adapter.ImageListAdapter;
 import com.lib.imageselector.ui.widget.FolderWindow;
 import com.lib.imageselector.ui.widget.GridSpacingItemDecoration;
+import com.lib.imageselector.ui.widget.PopupWindowUtil;
 import com.lib.imageselector.utils.MediaLoader;
 
 import java.util.ArrayList;
@@ -136,7 +138,6 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         //bottomSheetDialog = new BottomSheetDialog(this);
         //bottomSheetDialog.setContentView(folderListRV);
         folderWindow = new FolderWindow(this, folderList);
-        folderWindow.setMarginPx(folderSelectLayout.getHeight());
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -159,6 +160,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
         folderSelectLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                folderWindow.setMarginPx(mFoldSelectFL.getHeight());
                 //数据未加载完成时不响应点击
                 if(folderList.size() == 0) {
                     return;
@@ -172,7 +174,10 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageLis
                     /*mFoldSelectFL.getLocationOnScreen(location);
                     Log.d(TAG, "onClick: " + mFoldSelectFL.getHeight() + "_" + location[1]);
                     folderWindow.showAtLocation(mFoldSelectFL, Gravity.BOTTOM, 0, 0);*/
-                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.NO_GRAVITY, 0 , 0);
+                    //folderWindow.showAtLocation(mFoldSelectFL, Gravity.NO_GRAVITY, 0 , 0);
+                    //folderWindow.showAsDropDown(mFoldSelectFL);
+                    int windPos[] = PopupWindowUtil.calculatePopWindowPos(mFoldSelectFL, folderWindow.getContentView());
+                    folderWindow.showAtLocation(mFoldSelectFL, Gravity.NO_GRAVITY, 0, 0);
                 }
             }
         });
